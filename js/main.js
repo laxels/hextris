@@ -113,7 +113,9 @@ function init(b) {
 	infobuttonfading = true;
 	$("#pauseBtn").attr('src',"./images/btn_pause.svg");
 	hideUIElements();
-	var saveState = localStorage.getItem("saveState") || "{}";
+	// TODO: re-enable saveState
+	// var saveState = localStorage.getItem("saveState") || "{}";
+	var saveState = "{}";
 	saveState = JSONfn.parse(saveState);
 	document.getElementById("canvas").className = "";
 	history = {};
