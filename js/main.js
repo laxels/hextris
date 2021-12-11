@@ -116,7 +116,7 @@ function init(b) {
 	// TODO: re-enable saveState
 	// var saveState = localStorage.getItem("saveState") || "{}";
 	var saveState = "{}";
-	saveState = JSONfn.parse(saveState);
+	saveState = JSON.parse(saveState);
 	document.getElementById("canvas").className = "";
 	history = {};
 	importedHistory = undefined;
@@ -255,7 +255,7 @@ function animLoop() {
 
 		if (checkGameOver() && !importing) {
 			var saveState = localStorage.getItem("saveState") || "{}";
-			saveState = JSONfn.parse(saveState);
+			saveState = JSON.parse(saveState);
 			gameState = 2;
 
 			setTimeout(function() {
