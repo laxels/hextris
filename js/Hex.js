@@ -25,7 +25,9 @@ function Hex(sideLength) {
 		this.blocks.push([]);
 	}
 
+	// TODO: re-enable shake
 	this.shake = function(obj) { //lane as in particle lane
+		return;
 		var angle = 30 + obj.lane * 60;
 		angle *= Math.PI / 180;
 		var dx = Math.cos(angle) * obj.magnitude;
