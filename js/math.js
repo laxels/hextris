@@ -9,6 +9,6 @@ function rotatePoint(x, y, theta) {
 	};
 }
 
-function randInt(min, max) {
-	return Math.floor((Math.random() * max) + min);
+function randInt(n) {
+	return Math.floor(Math.random() * n);
 }
