@@ -69,6 +69,8 @@ function Block(fallingLane, color, iter, distFromHex, settled) {
 	};
 
 	this.draw = function(attached, index) {
+		const lineWidth = 4 * settings.scale;
+
 		this.height = settings.blockHeight;
 		if (Math.abs(settings.scale - settings.prevScale) > 0.000000001) {
 			this.distFromHex *= (settings.scale/settings.prevScale);
@@ -93,9 +95,9 @@ function Block(fallingLane, color, iter, distFromHex, settled) {
 			this.angle += this.angularVelocity;
 		}
 		
-		this.width = 2 * this.distFromHex / Math.sqrt(3);
-		this.widthWide = 2 * (this.distFromHex + this.height) / Math.sqrt(3);
-		//this.widthWide = this.width + this.height + 3;
+		const drawHeight = this.height - lineWidth;
+		this.width = 2 * this.distFromHex / Math.sqrt(3) - lineWidth;
+		this.widthWide = 2 * (this.distFromHex + drawHeight) / Math.sqrt(3) - lineWidth;
 		var p1;
 		var p2;
 		var p3;
@@ -105,45 +107,54 @@ function Block(fallingLane, color, iter, distFromHex, settled) {
 			if (rat > 1) {
 				rat = 1;
 			}
-			p1 = rotatePoint((-this.width / 2) * rat, this.height / 2, this.angle);
-			p2 = rotatePoint((this.width / 2) * rat, this.height / 2, this.angle);
-			p3 = rotatePoint((this.widthWide / 2) * rat, -this.height / 2, this.angle);
-			p4 = rotatePoint((-this.widthWide / 2) * rat, -this.height / 2, this.angle);
+			p1 = rotatePoint((-this.width / 2) * rat, drawHeight / 2, this.angle);
+			p2 = rotatePoint((this.width / 2) * rat, drawHeight / 2, this.angle);
+			p3 = rotatePoint((this.widthWide / 2) * rat, -drawHeight / 2, this.angle);
+			p4 = rotatePoint((-this.widthWide / 2) * rat, -drawHeight / 2, this.angle);
 			if ((MainHex.ct - this.ict) >= this.initLen) {
 				this.initializing = 0;
 			}
 		} else {
-			p1 = rotatePoint(-this.width / 2, this.height / 2, this.angle);
-			p2 = rotatePoint(this.width / 2, this.height / 2, this.angle);
-			p3 = rotatePoint(this.widthWide / 2, -this.height / 2, this.angle);
-			p4 = rotatePoint(-this.widthWide / 2, -this.height / 2, this.angle);
+			p1 = rotatePoint(-this.width / 2, drawHeight / 2, this.angle);
+			p2 = rotatePoint(this.width / 2, drawHeight / 2, this.angle);
+			p3 = rotatePoint(this.widthWide / 2, -drawHeight / 2, this.angle);
+			p4 = rotatePoint(-this.widthWide / 2, -drawHeight / 2, this.angle);
 		}
 
+		let drawColor = this.color;
+		ctx.fillStyle = this.color;
 		if (this.deleted) {
+			drawColor = "#FFF";
 			ctx.fillStyle = "#FFF";
 		} else if (gameState === 0) {
 			if (this.color.charAt(0) == 'r') {
+				drawColor = rgbColorsToTintedColors[this.color];
 				ctx.fillStyle = rgbColorsToTintedColors[this.color];
 			}
 			else {
+				drawColor = hexColorsToTintedColors[this.color];
 				ctx.fillStyle = hexColorsToTintedColors[this.color];
 			}
 		}
-		else {
-			ctx.fillStyle = this.color;
-		}
 
 		ctx.globalAlpha = this.opacity;
-		var baseX = trueCanvas.width / 2 + Math.sin((this.angle) * (Math.PI / 180)) * (this.distFromHex + this.height / 2) + gdx;
-		var baseY = trueCanvas.height / 2 - Math.cos((this.angle) * (Math.PI / 180)) * (this.distFromHex + this.height / 2) + gdy;
+		var baseX = trueCanvas.width / 2 + Math.sin((this.angle) * (Math.PI / 180)) * (this.distFromHex + drawHeight / 2) + gdx;
+		var baseY = trueCanvas.height / 2 - Math.cos((this.angle) * (Math.PI / 180)) * (this.distFromHex + drawHeight / 2) + gdy;
 		ctx.beginPath();
 		ctx.moveTo(baseX + p1.x, baseY + p1.y);
 		ctx.lineTo(baseX + p2.x, baseY + p2.y);
 		ctx.lineTo(baseX + p3.x, baseY + p3.y);
 		ctx.lineTo(baseX + p4.x, baseY + p4.y);
-		//ctx.lineTo(baseX + p1.x, baseY + p1.y);
 		ctx.closePath();
-		ctx.fill();
+		// ctx.fill();
+
+		const prevLineWidth = ctx.lineWidth;
+		const prevStrokeStyle = ctx.strokeStyle;
+		ctx.lineWidth = lineWidth;
+		ctx.strokeStyle = drawColor;
+		ctx.stroke();
+		ctx.lineWidth = prevLineWidth;
+		ctx.strokeStyle = prevStrokeStyle;
 
 		if (this.tint) {
 			if (this.opacity < 1) {
