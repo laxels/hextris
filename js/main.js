@@ -186,7 +186,7 @@ function init(b) {
 	hideText();
 }
 
-function addNewBlock(blocklane, color, iter, distFromHex, settled) { //last two are optional parameters
+function addNewBlock(blocklane, blockType, iter, distFromHex, settled) { //last two are optional parameters
 	iter *= settings.speedModifier;
 	if (!history[MainHex.ct]) {
 		history[MainHex.ct] = {};
@@ -194,7 +194,7 @@ function addNewBlock(blocklane, color, iter, distFromHex, settled) { //last two 
 
 	history[MainHex.ct].block = {
 		blocklane: blocklane,
-		color: color,
+		blockType: blockType,
 		iter: iter
 	};
 
@@ -204,7 +204,7 @@ function addNewBlock(blocklane, color, iter, distFromHex, settled) { //last two 
 	if (settled) {
 		blockHist[MainHex.ct].settled = settled;
 	}
-	blocks.push(new Block(blocklane, color, iter, distFromHex, settled));
+	blocks.push(new Block(blocklane, blockType, iter, distFromHex, settled));
 }
 
 function exportHistory() {

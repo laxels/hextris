@@ -17,7 +17,7 @@ function Hex(sideLength) {
 	this.y = trueCanvas.height / 2;
 	this.ct = 0;
 	this.lastCombo = this.ct - settings.comboTime;
-	this.lastColorScored = "#000";
+	this.lastBlockTypeScored = null;
 	this.comboTime = 1;
 	this.texts = [];
 		this.lastRotate = Date.now();

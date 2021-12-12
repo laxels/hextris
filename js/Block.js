@@ -1,4 +1,4 @@
-function Block(fallingLane, color, iter, distFromHex, settled) {
+function Block(fallingLane, blockType, iter, distFromHex, settled) {
 	// whether or not a block is rested on the center hex or another block
 	this.settled = (settled === undefined) ? 0 : 1;
 	this.height = settings.blockHeight;
@@ -11,7 +11,8 @@ function Block(fallingLane, color, iter, distFromHex, settled) {
 	//for calculating the rotation of blocks attached to the center hex
 	this.angularVelocity = 0;
 	this.targetAngle = this.angle;
-	this.color = color;
+	this.blockType = blockType;
+	this.color = colors[0];
 	//blocks that are slated to be deleted after a valid score has happened
 	this.deleted = 0;
 	//blocks slated to be removed from falling and added to the hex
@@ -146,8 +147,10 @@ function Block(fallingLane, color, iter, distFromHex, settled) {
 		ctx.lineTo(baseX + p3.x, baseY + p3.y);
 		ctx.lineTo(baseX + p4.x, baseY + p4.y);
 		ctx.closePath();
-		// ctx.fill();
-
+		
+		if (this.blockType === 'solid') {
+			ctx.fill();
+		}
 		const prevLineWidth = ctx.lineWidth;
 		const prevStrokeStyle = ctx.strokeStyle;
 		ctx.lineWidth = lineWidth;

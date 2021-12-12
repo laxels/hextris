@@ -11,8 +11,8 @@ function search(twoD,oneD){
 function floodFill(hex, side, index, deleting) {
 	if (hex.blocks[side] === undefined || hex.blocks[side][index] === undefined) return;
 
-	//store the color
-	var color = hex.blocks[side][index].color;
+	//store the block type
+	const blockType = hex.blocks[side][index].blockType;
 	//nested for loops for navigating the blocks
 	for(var x =-1;x<2;x++){
 		for(var y =-1;y<2;y++){
@@ -25,8 +25,8 @@ function floodFill(hex, side, index, deleting) {
 			//making sure the block exists at this side and index
 			if(hex.blocks[curSide] === undefined){continue;}
 			if(hex.blocks[curSide][curIndex] !== undefined){
-				// checking equivalency of color, if its already been explored, and if it isn't already deleted
-				if(hex.blocks[curSide][curIndex].color == color && search(deleting,[curSide,curIndex]) === false && hex.blocks[curSide][curIndex].deleted === 0 ) {
+				// checking equivalency of block type, if its already been explored, and if it isn't already deleted
+				if(hex.blocks[curSide][curIndex].blockType == blockType && search(deleting,[curSide,curIndex]) === false && hex.blocks[curSide][curIndex].deleted === 0 ) {
 					//add this to the array of already explored
 					deleting.push([curSide,curIndex]);
 					//recall with next block explored
@@ -39,15 +39,18 @@ function floodFill(hex, side, index, deleting) {
 
 function consolidateBlocks(hex,side,index){
 	//record which sides have been changed
-	var sidesChanged =[];
-	var deleting=[];
+	var sidesChanged = [];
+	var deleting = [];
 	var deletedBlocks = [];
 	//add start case
-	deleting.push([side,index]);
+	deleting.push([side, index]);
 	//fill deleting	
-	floodFill(hex,side,index,deleting);
+	floodFill(hex, side, index, deleting);
 	//make sure there are more than 3 blocks to be deleted
-	if(deleting.length<3){return;}
+	if (deleting.length < 3) {
+		return;
+	}
+
 	var i;
 	for(i=0; i<deleting.length;i++) {
 		var arr = deleting[i];
@@ -79,6 +82,8 @@ function consolidateBlocks(hex,side,index){
 	}
 	var adder = deleting.length * deleting.length * hex.comboMultiplier;
 	hex.texts.push(new Text(hex.x,hex.y,"+ "+adder.toString(),"bold Q ",deletedBlocks[0].color,fadeUpAndOut));
-		hex.lastColorScored = deletedBlocks[0].color;
+	hex.lastBlockTypeScored = deletedBlocks[0].blockType;
 	score += adder;
+
+	console.log('deleted blocks');
 }
