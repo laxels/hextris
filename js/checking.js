@@ -38,8 +38,6 @@ function floodFill(hex, side, index, deleting) {
 }
 
 function consolidateBlocks(hex,side,index){
-	//record which sides have been changed
-	var sidesChanged = [];
 	var deleting = [];
 	var deletedBlocks = [];
 	//add start case
@@ -56,10 +54,6 @@ function consolidateBlocks(hex,side,index){
 		var arr = deleting[i];
 		//just making sure the arrays are as they should be
 		if(arr !== undefined && arr.length==2) {
-			//add to sides changed if not in there
-			if(sidesChanged.indexOf(arr[0])==-1){
-				sidesChanged.push(arr[0]);
-			}
 			//mark as deleted
 			hex.blocks[arr[0]][arr[1]].deleted = 1;
 			deletedBlocks.push(hex.blocks[arr[0]][arr[1]]);
