@@ -5,20 +5,18 @@ function initialize(a) {
 	window.rush = 1;
 	window.lastTime = Date.now();
 	window.iframHasLoaded = false;
-	// window.blockTypes = ['solid', 'lined', 'empty'];
-	window.blockTypes = ['solid', 'empty'];
-	window.colors = ["#e74c3c"];
+	window.blockTypes = ['solid', 'lined', 'empty'];
+	window.colors = ["#53ECF8"];
 	window.hexColorsToTintedColors = {
-		"#e74c3c": "rgb(241,163,155)",
+		"#53ECF8": "rgb(83,236,248)",
 	};
 	window.rgbToHex = {
-		"rgb(231,76,60)": "#e74c3c",
+		"rgb(83,236,248)": "#53ECF8",
 	};
 	window.rgbColorsToTintedColors = {
-		"rgb(231,76,60)": "rgb(241,163,155)",
+		"rgb(83,236,248)": "rgb(83,236,248)",
 	};
-	window.hexagonBackgroundColor = 'rgb(236, 240, 241)';
-	window.hexagonBackgroundColorClear = 'rgba(236, 240, 241, 0.5)';
+	window.hexagonBackgroundColor = 'rgba(0, 0, 0, 0)';
 	window.centerBlue = 'rgb(44,62,80)';
 	window.angularVelocityConst = 4;
 	window.scoreOpacity = 0;

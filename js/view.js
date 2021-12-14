@@ -34,9 +34,6 @@ function drawScoreboard() {
 	} else if (scoreString.length == 9) {
 		scoreSize = 27;
 	}
-	//if (rush ==1){
-		var color = "rgb(236, 240, 241)";
-	//}
     var fontSize = settings.platform == 'mobile' ? 35 : 30;
     var h = trueCanvas.height / 2 + gdy + 100 * settings.scale;
 	if (gameState === 0) {
@@ -49,10 +46,10 @@ function drawScoreboard() {
 		renderText(trueCanvas.width / 2 + gdx + 6 * settings.scale, trueCanvas.height / 2 + gdy - 155 * settings.scale, 150, "#2c3e50", "Hextris");
 		renderText(trueCanvas.width / 2 + gdx + 5 * settings.scale, h, fontSize, "rgb(44,62,80)", 'Play!');
 		ctx.globalAlpha = scoreOpacity;
-		renderText(trueCanvas.width / 2 + gdx, trueCanvas.height / 2 + gdy, scoreSize, color, score);
+		renderText(trueCanvas.width / 2 + gdx, trueCanvas.height / 2 + gdy, scoreSize, window.colors[0], score);
 	} else {
 		ctx.globalAlpha = scoreOpacity;
-		renderText(trueCanvas.width / 2 + gdx, trueCanvas.height / 2 + gdy, scoreSize, color, score);
+		renderText(trueCanvas.width / 2 + gdx, trueCanvas.height / 2 + gdy, scoreSize, window.colors[0], score);
 	}
 
 	ctx.globalAlpha = 1;

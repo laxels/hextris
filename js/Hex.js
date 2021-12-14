@@ -1,7 +1,8 @@
 function Hex(sideLength) {
 	this.playThrough = 0;
-	this.fillColor = [44,62,80];
-	this.tempColor = [44,62,80];
+	this.fillColor = 'rgba(0, 0, 0, 0)';
+	this.lineWidth = 2;
+	this.lineColor = window.colors[0];
 	this.angularVelocity = 0;
 	this.position = 0;
 	this.dy = 0;
@@ -163,10 +164,6 @@ function Hex(sideLength) {
 			this.angle += this.angularVelocity;
 		}
  
-		drawPolygon(this.x + gdx, this.y + gdy + this.dy, this.sides, this.sideLength, this.angle,arrayToColor(this.fillColor) , 0, 'rgba(0,0,0,0)');
+		drawPolygon(this.x + gdx, this.y + gdy + this.dy, this.sides, this.sideLength, this.angle, this.fillColor, this.lineWidth, this.lineColor);
 	};
-}
-
-function arrayToColor(arr){
-	return 'rgb(' + arr[0]+ ','+arr[1]+','+arr[2]+')';
 }
