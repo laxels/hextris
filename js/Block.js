@@ -70,7 +70,7 @@ function Block(fallingLane, blockType, iter, distFromHex, settled) {
 	};
 
 	this.draw = function(attached, index) {
-		const lineWidth = 4 * settings.scale;
+		const lineWidth = 2 * settings.scale;
 
 		this.height = settings.blockHeight;
 		if (Math.abs(settings.scale - settings.prevScale) > 0.000000001) {
@@ -103,6 +103,8 @@ function Block(fallingLane, blockType, iter, distFromHex, settled) {
 		var p2;
 		var p3;
 		var p4;
+		let p1w;
+		let p2w;
 		if (this.initializing) {
 			var rat = ((MainHex.ct - this.ict)/this.initLen);
 			if (rat > 1) {
@@ -112,6 +114,8 @@ function Block(fallingLane, blockType, iter, distFromHex, settled) {
 			p2 = rotatePoint((this.width / 2) * rat, drawHeight / 2, this.angle);
 			p3 = rotatePoint((this.widthWide / 2) * rat, -drawHeight / 2, this.angle);
 			p4 = rotatePoint((-this.widthWide / 2) * rat, -drawHeight / 2, this.angle);
+			p1w = rotatePoint((-this.widthWide / 2) * rat, drawHeight / 2, this.angle);
+			p2w = rotatePoint((this.widthWide / 2) * rat, drawHeight / 2, this.angle);
 			if ((MainHex.ct - this.ict) >= this.initLen) {
 				this.initializing = 0;
 			}
@@ -120,6 +124,8 @@ function Block(fallingLane, blockType, iter, distFromHex, settled) {
 			p2 = rotatePoint(this.width / 2, drawHeight / 2, this.angle);
 			p3 = rotatePoint(this.widthWide / 2, -drawHeight / 2, this.angle);
 			p4 = rotatePoint(-this.widthWide / 2, -drawHeight / 2, this.angle);
+			p1w = rotatePoint(-this.widthWide / 2, drawHeight / 2, this.angle);
+			p2w = rotatePoint(this.widthWide / 2, drawHeight / 2, this.angle);
 		}
 
 		let drawColor = this.color;
@@ -156,6 +162,40 @@ function Block(fallingLane, blockType, iter, distFromHex, settled) {
 		ctx.lineWidth = lineWidth;
 		ctx.strokeStyle = drawColor;
 		ctx.stroke();
+		
+		if (this.blockType === 'lined') {
+			ctx.lineWidth = 1;
+
+			const segments = 40;
+			const wideVertex1 = {x: baseX + p4.x, y: baseY + p4.y};
+			const wideVertex2 = {x: baseX + p3.x, y: baseY + p3.y};
+			const narrowVertex1 = {x: baseX + p1w.x, y: baseY + p1w.y};
+			const narrowVertex2 = {x: baseX + p2w.x, y: baseY + p2w.y};
+			const delta = {x: (wideVertex2.x - wideVertex1.x) / segments, y: (wideVertex2.y - wideVertex1.y) / segments};
+			const dist = getDistanceBetween2Points(p1, p1w);
+			
+			let x1 = wideVertex1.x + delta.x;
+			let y1 = wideVertex1.y + delta.y;
+			let x2 = narrowVertex1.x + delta.x;
+			let y2 = narrowVertex1.y + delta.y;
+			for (let i=0; i<segments-1; i++) {
+				const d1 = getDistanceBetween2Points({x: x2, y: y2}, narrowVertex1);
+				const d2 = getDistanceBetween2Points({x: x2, y: y2}, narrowVertex2);
+				const percentLength = Math.min(d1/dist, d2/dist, 1);
+				const truncatedPoint = getPointAlongLine({x: x1, y: y1}, {x: x2, y: y2}, percentLength)
+
+				ctx.beginPath();
+				ctx.moveTo(x1, y1);
+				ctx.lineTo(truncatedPoint.x, truncatedPoint.y);
+				ctx.stroke();
+				
+				x1 += delta.x;
+				y1 += delta.y;
+				x2 += delta.x;
+				y2 += delta.y;
+			}
+		}
+
 		ctx.lineWidth = prevLineWidth;
 		ctx.strokeStyle = prevStrokeStyle;
 
@@ -209,4 +249,16 @@ function findCenterOfBlocks(arr) {
 		x:trueCanvas.width/2 + Math.cos(avgAngle * (Math.PI / 180)) * avgDFH,
 		y:trueCanvas.height/2 + Math.sin(avgAngle * (Math.PI / 180)) * avgDFH
 	};
+}
+
+function getDistanceBetween2Points(p1, p2) {
+	const dx = p2.x - p1.x;
+	const dy = p2.y - p1.y;
+	return Math.sqrt(dx*dx + dy*dy);
+}
+
+function getPointAlongLine(p1, p2, percentLength) {
+	const x = p1.x + (p2.x - p1.x) * percentLength;
+	const y = p1.y + (p2.y - p1.y) * percentLength;
+	return {x, y};
 }
