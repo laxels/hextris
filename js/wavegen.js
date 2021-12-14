@@ -17,8 +17,7 @@ function blockDestroyed() {
 function waveGen(hex) {
 	this.lastGen = 0;
 	this.last = 0;
-	// this.nextGen = 2700;
-	this.nextGen = 500;
+	this.nextGen = 2700;
 	this.start = 0;
 	this.blockTypes = blockTypes;
 	this.ct = 0;
