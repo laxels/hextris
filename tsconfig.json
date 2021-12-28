@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    // specific to web
+    "target": "es2020",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "module": "esnext",
+    "moduleResolution": "node",
+
+    // strict but still comfortable
+    "strict": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+
+    // probably always want these
+    "sourceMap": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+
+    // more optimized, but must be used with `tslib` package
+    "importHelpers": true,
+    
+    "outDir": "build"
+  },
+  "include": ["src"]
+}
