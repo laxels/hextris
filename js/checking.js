@@ -106,5 +106,5 @@ function consolidateBlocks(hex, side, index) {
   hex.lastBlockTypeScored = deletedBlocks[0].blockType;
   score += adder;
 
-  console.log("deleted blocks");
+  deletedBlocks.filter((b) => b.glyph).forEach((b) => sendGlyph(b.glyph));
 }

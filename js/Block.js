@@ -33,6 +33,19 @@ function Block(fallingLane, blockType, iter, distFromHex, settled) {
   //distance from center hex
   this.distFromHex = distFromHex || settings.startDist * settings.scale;
 
+  if (uniformBlocksLeft > 0) {
+    this.blockType = `empty`;
+    uniformBlocksLeft--;
+  }
+  this.glyph = "";
+  if (glyphsEnabled && this.blockType === "empty") {
+    this.glyph = getRandomGlyph();
+    if (!glyphDialogPresented) {
+      presentDialog(`glyphs`);
+      glyphDialogPresented = true;
+    }
+  }
+
   this.incrementOpacity = function () {
     if (this.deleted) {
       //add shakes
@@ -226,6 +239,16 @@ function Block(fallingLane, blockType, iter, distFromHex, settled) {
       }
     }
 
+    if (this.glyph) {
+      ctx.save();
+      const offset = rotatePoint(-4, 6, this.angle);
+      ctx.translate(baseX + offset.x, baseY + offset.y);
+      ctx.rotate((this.angle * Math.PI) / 180);
+      ctx.font = ctx.font.replace(/\d+px/, `16px`);
+      ctx.fillText(this.glyph, 0, 0);
+      ctx.restore();
+    }
+
     ctx.lineWidth = prevLineWidth;
     ctx.strokeStyle = prevStrokeStyle;
 
@@ -291,4 +314,15 @@ function getPointAlongLine(p1, p2, percentLength) {
   const x = p1.x + (p2.x - p1.x) * percentLength;
   const y = p1.y + (p2.y - p1.y) * percentLength;
   return { x, y };
+}
+
+let glyphDialogPresented = false;
+let glyphsEnabled = false;
+function enableGlyphs() {
+  glyphsEnabled = true;
+}
+
+let uniformBlocksLeft = 0;
+function activateUniformBlocks(n) {
+  uniformBlocksLeft = n;
 }
