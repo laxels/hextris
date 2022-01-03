@@ -45,10 +45,11 @@ setInterval(() => {
 }, 500);
 
 async function start(): Promise<void> {
-  await presentDialog(DIALOGS.opening!);
+  await presentDialog(`opening`);
 }
 
-async function presentDialog({ lines, responses }: Dialog): Promise<void> {
+async function presentDialog(key: string): Promise<void> {
+  const { lines, responses } = DIALOGS[key]!;
   dialogBox.innerHTML = ``;
 
   for (const line of lines) {
@@ -64,7 +65,7 @@ async function presentDialog({ lines, responses }: Dialog): Promise<void> {
     button.innerText = text;
     button.onclick = () => {
       if (nextDialogKey != null) {
-        void presentDialog(DIALOGS[nextDialogKey]!);
+        void presentDialog(nextDialogKey);
       }
       handler?.();
     };
