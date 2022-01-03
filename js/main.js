@@ -89,7 +89,6 @@ function checkVisualElements(arg) {
 function hideUIElements() {
   $("#pauseBtn").hide();
   $("#restartBtn").hide();
-  $("#startBtn").hide();
 }
 
 function init(b) {
@@ -136,7 +135,6 @@ function init(b) {
   gameState = 1;
   $("#restartBtn").hide();
   $("#pauseBtn").show();
-  if (saveState.hex !== undefined) gameState = 1;
 
   settings.blockHeight = settings.baseBlockHeight * settings.scale;
   settings.hexWidth = settings.baseHexWidth * settings.scale;
@@ -220,7 +218,6 @@ function exportHistory() {
 }
 
 function setStartScreen() {
-  $("#startBtn").show();
   init();
   if (isStateSaved()) {
     importing = 0;
@@ -230,7 +227,6 @@ function setStartScreen() {
 
   $("#pauseBtn").hide();
   $("#restartBtn").hide();
-  $("#startBtn").show();
 
   gameState = 0;
   requestAnimFrame(animLoop);

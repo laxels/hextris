@@ -1,7 +1,11 @@
-const LINE_DELAY_MS = 1000;
-const TEXT_DELAY_MS = 20;
-// const LINE_DELAY_MS = 0;
-// const TEXT_DELAY_MS = 0;
+interface Window {
+  startGame: () => void;
+}
+
+// const LINE_DELAY_MS = 1000;
+// const TEXT_DELAY_MS = 20;
+const LINE_DELAY_MS = 0;
+const TEXT_DELAY_MS = 0;
 
 type Dialog = {
   lines: string[];
@@ -10,7 +14,8 @@ type Dialog = {
 
 type DialogResponse = {
   text: string;
-  nextDialogKey: string;
+  nextDialogKey?: string;
+  handler?: () => void;
 };
 
 const DIALOGS: { [key: string]: Dialog } = {
@@ -23,11 +28,11 @@ const DIALOGS: { [key: string]: Dialog } = {
   },
   cantUnderstand: {
     lines: [`Y can't u understand me doe`, `Dat's not cool`],
-    responses: [],
+    responses: [{ text: `Start game`, handler: window.startGame }],
   },
   nani: {
     lines: [`Now I can't understand YOU`, `Fkin' weeb`],
-    responses: [],
+    responses: [{ text: `Start game`, handler: window.startGame }],
   },
 };
 
@@ -53,11 +58,16 @@ async function presentDialog({ lines, responses }: Dialog): Promise<void> {
 
   const buttonContainer = document.createElement(`div`);
   buttonContainer.classList.add(`dialog-responses`);
-  responses.forEach(({ text, nextDialogKey }) => {
+  responses.forEach(({ text, nextDialogKey, handler }) => {
     const button = document.createElement(`button`);
     button.classList.add(`dialog-response`);
     button.innerText = text;
-    button.onclick = () => presentDialog(DIALOGS[nextDialogKey]!);
+    button.onclick = () => {
+      if (nextDialogKey != null) {
+        void presentDialog(DIALOGS[nextDialogKey]!);
+      }
+      handler?.();
+    };
     dialogBox.append(button);
   });
 }

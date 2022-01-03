@@ -140,12 +140,6 @@ function initialize(a) {
         pause();
       }
     };
-    $("#startBtn").off();
-    if (settings.platform == "mobile") {
-      $("#startBtn").on("touchstart", startBtnHandler);
-    } else {
-      $("#startBtn").on("mousedown", startBtnHandler);
-    }
 
     document.addEventListener(
       "touchmove",
@@ -201,7 +195,7 @@ function initialize(a) {
   }
 }
 
-function startBtnHandler() {
+function startGame() {
   setTimeout(function () {
     if (settings.platform == "mobile") {
       try {
