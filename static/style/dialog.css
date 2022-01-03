@@ -38,3 +38,37 @@
 #dialog-caret.visible {
   visibility: visible;
 }
+
+#powerup-container {
+  box-sizing: border-box;
+  position: fixed;
+  left: 20px;
+  top: 105px;
+  transition: visibility 1s, opacity 1s;
+}
+#powerup-container.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+#powerup-bar {
+  width: 300px;
+  height: 20px;
+  border: 2px solid #53ecf8;
+}
+
+#powerup-bar #powerup-fill {
+  background-color: #53ecf8;
+  height: 100%;
+  width: 0%;
+  transition: width 0.5s;
+}
+
+#powerup-trigger {
+  margin-top: 20px;
+  padding: 10px;
+  border: 2px solid #53ecf8;
+  cursor: pointer;
+  font-size: 20px;
+  color: #53ecf8;
+}

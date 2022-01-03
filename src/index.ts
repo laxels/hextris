@@ -9,9 +9,10 @@ const TEST = window.location.search.startsWith(`?test`);
 const LINE_DELAY_MS = TEST ? 0 : 1000;
 const TEXT_DELAY_MS = TEST ? 0 : 20;
 
+const TEST_STEP = `uniformBlocksAgain`;
 if (TEST) {
   setTimeout(() => {
-    // window.startGame();
+    window.startGame();
   }, 1000);
 }
 
@@ -173,7 +174,12 @@ const DIALOGS: { [key: string]: Dialog } = {
     ],
   },
   uniformBlocksNow: {
-    onStart: () => setTimeout(() => window.activateUniformBlocks(3), 3000),
+    onStart: () => {
+      setTimeout(() => {
+        window.activateUniformBlocks(3);
+        activatePowerupBar(0);
+      }, 3000);
+    },
     lines: [
       `You got it!`,
       `That's all I can convert for now.`,
@@ -183,6 +189,11 @@ const DIALOGS: { [key: string]: Dialog } = {
     responses: [],
   },
   uniformBlocksLater: {
+    onStart: () => {
+      setTimeout(() => {
+        activatePowerupBar(30);
+      }, 2000);
+    },
     lines: [
       `Good call.`,
       `Here is a status bar for my energy. You can let me know when you want me to convert blocks by clicking the DEPLOY button.`,
@@ -221,6 +232,11 @@ const DIALOGS: { [key: string]: Dialog } = {
 const dialogBox = document.getElementById(`dialog-box`)!;
 dialogBox.onmousedown = (e) => e.stopPropagation();
 
+const powerupContainer = document.getElementById(`powerup-container`)!;
+const powerupFill = document.getElementById(`powerup-fill`)!;
+const powerupTrigger = document.getElementById(`powerup-trigger`)!;
+powerupTrigger.addEventListener(`mousedown`, triggerPowerup);
+
 const caret = document.createElement(`div`);
 caret.id = `dialog-caret`;
 setInterval(() => {
@@ -228,7 +244,7 @@ setInterval(() => {
 }, 500);
 
 async function start(): Promise<void> {
-  await presentDialog(`opening0`);
+  await presentDialog(TEST ? TEST_STEP : `opening0`);
 }
 
 let currentDialogKey: string | null = null;
@@ -335,6 +351,30 @@ function clearedBlocks(): void {
   if (++timesCleared >= 5 && currentDialogKey === `yes`) {
     void presentDialog(`cleared`);
   }
+}
+
+let powerupValue = 0;
+function activatePowerupBar(initialValue: number): void {
+  updatePowerupBar(initialValue);
+  powerupContainer.classList.remove(`hidden`);
+
+  setInterval(() => {
+    updatePowerupBar(Math.min(powerupValue + 10, 100));
+  }, 3000);
+}
+
+function updatePowerupBar(x: number): void {
+  powerupValue = x;
+  powerupFill.style.width = `${powerupValue}%`;
+}
+
+function triggerPowerup(): void {
+  const blocks = Math.floor(powerupValue / 10);
+  if (blocks <= 0) {
+    return;
+  }
+  window.activateUniformBlocks(blocks);
+  updatePowerupBar(0);
 }
 
 void start();
