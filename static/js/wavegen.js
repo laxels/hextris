@@ -26,6 +26,9 @@ function waveGen(hex) {
   this.difficulty = 1;
   this.dt = 0;
   this.update = function () {
+    if (wavegenPaused) {
+      return;
+    }
     this.currentFunction();
     this.dt = (settings.platform == "mobile" ? 14 : 16.6667) * MainHex.ct;
     this.computeDifficulty();

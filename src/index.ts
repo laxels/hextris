@@ -9,12 +9,8 @@ const TEST = window.location.search.startsWith(`?test`);
 const LINE_DELAY_MS = TEST ? 0 : 1000;
 const TEXT_DELAY_MS = TEST ? 0 : 20;
 
-const TEST_STEP = `uniformBlocksAgain`;
-if (TEST) {
-  setTimeout(() => {
-    window.startGame();
-  }, 1000);
-}
+const CLEARS_BEFORE_DIALOG_OPENING = TEST ? 1 : 5;
+const TEST_OPENING_STEP = `incoming`;
 
 type Dialog = {
   lines: string[];
@@ -36,12 +32,14 @@ const DIALOGS: { [key: string]: Dialog } = {
       `You are entering The Labyrinth and attempting to connect to the Valks network. It is dangerous to connect to networks you do not know. You may be exposed to malicious actors who may attempt to steal your data, delete your files, or lie to you.`,
       `Not recommended for children and those who are easily disturbed.`,
     ],
-    responses: [
-      { text: `Enter`, nextDialogKey: `opening0` },
-      { text: `Cancel` },
-    ],
+    responses: [{ text: `Enter` }, { text: `Cancel` }],
+  },
+  incoming: {
+    lines: [`INCOMING MESSAGE`],
+    responses: [{ text: `Receive message`, nextDialogKey: `opening0` }],
   },
   opening0: {
+    onStart: stopWavegen,
     lines: [`:)`, `ŇÐ ÆŇŇћ! Д ŒŇЭ ÅŇ Эþ φ ŸÅŒÅД°Ÿћ`],
     responses: [{ text: `What?`, nextDialogKey: `opening1` }],
   },
@@ -68,22 +66,11 @@ const DIALOGS: { [key: string]: Dialog } = {
   },
   yes: {
     onEnd: () => {
-      window.startGame();
-    },
-    lines: [
-      `Thank you thank you thank you thank you!`,
-      `First, you'll need to grasp the basics on how to break through this security system.`,
-      `Try your hand at clearing the security blocks.`,
-    ],
-    responses: [],
-  },
-  cleared: {
-    onEnd: () => {
+      resumeWavegen();
       setTimeout(window.enableGlyphs, 5000);
     },
     lines: [
-      `Nice! You're a natural.`,
-      `Alright, on to the next part.`,
+      `Thank you thank you thank you thank you!`,
       `When you see security blocks with glyphs on them, clear them and send the output to me. This will give me information on where to go. Kinda like a map.`,
       `I'll help you get through security layers in the Valks network, too.`,
     ],
@@ -96,7 +83,7 @@ const DIALOGS: { [key: string]: Dialog } = {
   },
   uniformBlocks: {
     onEnd: () => {
-      setTimeout(() => window.activateUniformBlocks(10), 3000);
+      setTimeout(() => window.activateUniformBlocks(10), 2000);
       setTimeout(() => {
         if (currentDialogKey !== `uniformBlocks`) {
           return;
@@ -111,6 +98,7 @@ const DIALOGS: { [key: string]: Dialog } = {
     responses: [{ text: `Thanks!`, nextDialogKey: `thanks` }],
   },
   thanks: {
+    onStart: stopWavegen,
     lines: [
       `Thank you for helping me!`,
       `I'm so grateful we ran into each other!`,
@@ -175,10 +163,9 @@ const DIALOGS: { [key: string]: Dialog } = {
   },
   uniformBlocksNow: {
     onStart: () => {
-      setTimeout(() => {
-        window.activateUniformBlocks(3);
-        activatePowerupBar(0);
-      }, 3000);
+      resumeWavegen();
+      window.activateUniformBlocks(3);
+      activatePowerupBar(0);
     },
     lines: [
       `You got it!`,
@@ -190,9 +177,8 @@ const DIALOGS: { [key: string]: Dialog } = {
   },
   uniformBlocksLater: {
     onStart: () => {
-      setTimeout(() => {
-        activatePowerupBar(30);
-      }, 2000);
+      resumeWavegen();
+      activatePowerupBar(30);
     },
     lines: [
       `Good call.`,
@@ -223,7 +209,7 @@ const DIALOGS: { [key: string]: Dialog } = {
     ],
   },
   alone: {
-    onEnd: window.startGame,
+    onEnd: resumeWavegen,
     lines: [`Very well.`, `I wish you the best on your journey.`],
     responses: [],
   },
@@ -242,10 +228,6 @@ caret.id = `dialog-caret`;
 setInterval(() => {
   caret.classList.toggle(`visible`);
 }, 500);
-
-async function start(): Promise<void> {
-  await presentDialog(TEST ? TEST_STEP : `opening0`);
-}
 
 let currentDialogKey: string | null = null;
 async function presentDialog(key: string): Promise<void> {
@@ -348,8 +330,11 @@ function sendGlyph(glyph: string): void {
 
 let timesCleared = 0;
 function clearedBlocks(): void {
-  if (++timesCleared >= 5 && currentDialogKey === `yes`) {
-    void presentDialog(`cleared`);
+  if (
+    ++timesCleared >= CLEARS_BEFORE_DIALOG_OPENING &&
+    currentDialogKey == null
+  ) {
+    void presentDialog(TEST ? TEST_OPENING_STEP : `incoming`);
   }
 }
 
@@ -377,4 +362,12 @@ function triggerPowerup(): void {
   updatePowerupBar(0);
 }
 
-void start();
+let wavegenPaused = false;
+function stopWavegen(): void {
+  wavegenPaused = true;
+}
+function resumeWavegen(): void {
+  wavegenPaused = false;
+}
+
+setTimeout(window.startGame);

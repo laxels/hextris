@@ -5,8 +5,8 @@ function initialize(a) {
   window.rush = 1;
   window.lastTime = Date.now();
   window.iframHasLoaded = false;
-  // window.blockTypes = ["solid", "lined", "empty"];
-  window.blockTypes = ["empty"];
+  window.blockTypes = ["solid", "lined", "empty"];
+  // window.blockTypes = ["empty"];
   window.colors = ["#53ECF8"];
   window.hexColorsToTintedColors = {
     "#53ECF8": "rgb(83,236,248)",
