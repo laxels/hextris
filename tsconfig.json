@@ -2,11 +2,7 @@
   "compilerOptions": {
     // specific to web
     "target": "es2020",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
     "moduleResolution": "node",
 
@@ -27,8 +23,8 @@
 
     // more optimized, but must be used with `tslib` package
     "importHelpers": true,
-    
-    "outDir": "build"
+
+    "outDir": "static/build"
   },
   "include": ["src"]
 }
