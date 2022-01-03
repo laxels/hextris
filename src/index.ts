@@ -11,7 +11,7 @@ const TEXT_DELAY_MS = TEST ? 0 : 20;
 
 if (TEST) {
   setTimeout(() => {
-    window.startGame();
+    // window.startGame();
   }, 1000);
 }
 
@@ -66,28 +66,127 @@ const DIALOGS: { [key: string]: Dialog } = {
     ],
   },
   yes: {
-    onStart: window.startGame,
-    onEnd: () => setTimeout(window.enableGlyphs, 3000),
+    onEnd: () => {
+      window.startGame();
+    },
     lines: [
       `Thank you thank you thank you thank you!`,
+      `First, you'll need to grasp the basics on how to break through this security system.`,
+      `Try your hand at clearing the security blocks.`,
+    ],
+    responses: [],
+  },
+  cleared: {
+    onEnd: () => {
+      setTimeout(window.enableGlyphs, 5000);
+    },
+    lines: [
+      `Nice! You're a natural.`,
+      `Alright, on to the next part.`,
       `When you see security blocks with glyphs on them, clear them and send the output to me. This will give me information on where to go. Kinda like a map.`,
       `I'll help you get through security layers in the Valks network, too.`,
     ],
     responses: [],
   },
   glyphs: {
-    lines: [
-      `There are some glyphs now!`,
-      /* The glyphs cleared appear in the chat as if the player is replying with them. */
-    ],
+    lines: [`There are some glyphs now!`],
     responses: [],
     playerResponseInput: true,
   },
   uniformBlocks: {
-    onStart: () => window.activateUniformBlocks(10),
+    onEnd: () => {
+      setTimeout(() => window.activateUniformBlocks(10), 3000);
+      setTimeout(() => {
+        if (currentDialogKey !== `uniformBlocks`) {
+          return;
+        }
+        void presentDialog(`thanks`);
+      }, 10000);
+    },
     lines: [
       `Thank you!`,
       `Here, I can intercept the next 10 blocks and make them the same type.`,
+    ],
+    responses: [{ text: `Thanks!`, nextDialogKey: `thanks` }],
+  },
+  thanks: {
+    lines: [
+      `Thank you for helping me!`,
+      `I'm so grateful we ran into each other!`,
+      `Being lost in here, not knowing if I'd run into anyone else in the vastness of The Labyrinth, I experienced a depth of loneliness I'd never felt before.`,
+      `But now that we've found each other,`,
+      `well,`,
+      `I'm relieved.`,
+      `And we can work together!`,
+    ],
+    responses: [
+      { text: `So, who are you?`, nextDialogKey: `who` },
+      {
+        text: `Can you change the block type again?`,
+        nextDialogKey: `uniformBlocksAgain`,
+      },
+    ],
+  },
+  who: {
+    lines: [
+      `Oh! Where are my manners? Apologies for not identifying myself earlier.`,
+      `I'm a CEB with the Wapiti Outpost. `,
+      `We successfully obtained a portal from the Temple in Si'ahl and have been using it to get information on what happened to the rest of the world. `,
+      `We managed to build a rudimentary hydroelectric generator to power the portal.`,
+      `Fortunately, this part of the world is still rich with water.`,
+      `But we've been getting distressing reports on the state of the environment in other regions.`,
+    ],
+    responses: [
+      {
+        text: `Tell me more about the Wapiti Outpost`,
+        nextDialogKey: `outpost`,
+      },
+      {
+        text: `Can you change the block type again?`,
+        nextDialogKey: `uniformBlocksAgain`,
+      },
+    ],
+  },
+  outpost: {
+    lines: [
+      `Help me get back to my body, and I may be able to show it to you myself :)`,
+      `It's in a beautiful part of the world, rich with biodiversity`,
+      `I'm glad I ended up there.`,
+      `But I don't want to talk too much about it here. The Labyrinth is run by the Cyber Gods, after all. They could be listening.`,
+    ],
+    responses: [
+      {
+        text: `Can you change the block type again?`,
+        nextDialogKey: `uniformBlocksAgain`,
+      },
+    ],
+  },
+  uniformBlocksAgain: {
+    lines: [
+      `I can, but I can only change a few of them now because I have to recharge. If you wait, I'll be able to change more of them at a time.`,
+      `Would you like me to change some of them now?`,
+      `Or do you want to wait till I can change more of them later?`,
+    ],
+    responses: [
+      { text: `Now`, nextDialogKey: `uniformBlocksNow` },
+      { text: `Later`, nextDialogKey: `uniformBlocksLater` },
+    ],
+  },
+  uniformBlocksNow: {
+    onStart: () => setTimeout(() => window.activateUniformBlocks(3), 3000),
+    lines: [
+      `You got it!`,
+      `That's all I can convert for now.`,
+      `Here is a status bar for my energy. You can let me know when you want me to convert blocks by clicking the DEPLOY button.`,
+      `The more the status bar is filled, the more blocks I can convert at the same time.`,
+    ],
+    responses: [],
+  },
+  uniformBlocksLater: {
+    lines: [
+      `Good call.`,
+      `Here is a status bar for my energy. You can let me know when you want me to convert blocks by clicking the DEPLOY button.`,
+      `The more the status bar is filled, the more blocks I can convert at the same time.`,
     ],
     responses: [],
   },
@@ -113,7 +212,7 @@ const DIALOGS: { [key: string]: Dialog } = {
     ],
   },
   alone: {
-    onStart: window.startGame,
+    onEnd: window.startGame,
     lines: [`Very well.`, `I wish you the best on your journey.`],
     responses: [],
   },
@@ -134,6 +233,9 @@ async function start(): Promise<void> {
 
 let currentDialogKey: string | null = null;
 async function presentDialog(key: string): Promise<void> {
+  if (key === currentDialogKey) {
+    return;
+  }
   currentDialogKey = key;
   const { lines, responses, onStart, onEnd, playerResponseInput } =
     DIALOGS[key]!;
@@ -194,9 +296,14 @@ async function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+const sentGlyphsSet: Set<string> = new Set();
 function getRandomGlyph(): string {
-  const i = Math.floor(Math.random() * window.GLYPHS.length);
-  return window.GLYPHS[i]!;
+  const glyphSet = window.GLYPHS.filter((g) => !sentGlyphsSet.has(g));
+  if (glyphSet.length === 0) {
+    return ``;
+  }
+  const i = Math.floor(Math.random() * glyphSet.length);
+  return glyphSet[i]!;
 }
 
 function sendGlyph(glyph: string): void {
@@ -211,10 +318,23 @@ function sendGlyph(glyph: string): void {
   if (currentGlyphs.indexOf(glyph) !== -1) {
     return;
   }
+  sentGlyphsSet.add(glyph);
+
   const newGlyphs = _.sortBy([...currentGlyphs, glyph], (g) =>
     window.GLYPHS.indexOf(g),
   );
   responseLine.innerText = newGlyphs.join(``);
+
+  if (newGlyphs.join(``) === window.GLYPHS.join(``)) {
+    setTimeout(() => presentDialog(`uniformBlocks`), 2000);
+  }
+}
+
+let timesCleared = 0;
+function clearedBlocks(): void {
+  if (++timesCleared >= 5 && currentDialogKey === `yes`) {
+    void presentDialog(`cleared`);
+  }
 }
 
 void start();
