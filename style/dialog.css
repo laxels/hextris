@@ -2,11 +2,13 @@
   position: fixed;
   left: 20px;
   top: 200px;
+  width: 300px;
   font-size: 20px;
   color: #53ecf8;
 }
 
 #dialog-box .line {
+  margin: 15px 0;
   line-height: 30px;
 }
 
