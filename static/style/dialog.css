@@ -18,6 +18,7 @@
 #dialog-box .line {
   margin: 15px 0;
   line-height: 30px;
+  transition: opacity 0.5s;
 }
 
 #dialog-box .dialog-responses {

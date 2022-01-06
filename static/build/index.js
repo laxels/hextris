@@ -196,6 +196,7 @@ const DIALOGS = {
 };
 const dialogBox = document.getElementById(`dialog-box`);
 dialogBox.onmousedown = (e) => e.stopPropagation();
+dialogBox.onscroll = updateLineOpacities;
 const powerupContainer = document.getElementById(`powerup-container`);
 const powerupFill = document.getElementById(`powerup-fill`);
 const powerupTrigger = document.getElementById(`powerup-trigger`);
@@ -240,6 +241,7 @@ async function presentDialog(key) {
         };
         dialogBox.append(button);
         dialogBox.scrollTop = dialogBox.scrollHeight;
+        updateLineOpacities();
     });
     onEnd?.();
 }
@@ -253,8 +255,19 @@ async function appendLine(line) {
         const c = line[i];
         lineText.append(c);
         dialogBox.scrollTop = dialogBox.scrollHeight;
+        updateLineOpacities();
         await wait(TEXT_DELAY_MS);
     }
+}
+function updateLineOpacities() {
+    const lines = dialogBox.querySelectorAll(`.line`);
+    lines.forEach((n) => {
+        const yPos = Math.max(0, n.offsetTop - dialogBox.scrollTop);
+        if (dialogBox.scrollHeight < 300 || yPos > 100) {
+            return;
+        }
+        n.style.opacity = String(0.2 + (yPos / 100) * 0.8);
+    });
 }
 async function wait(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));

@@ -222,6 +222,7 @@ const DIALOGS: { [key: string]: Dialog } = {
 
 const dialogBox = document.getElementById(`dialog-box`)!;
 dialogBox.onmousedown = (e) => e.stopPropagation();
+dialogBox.onscroll = updateLineOpacities;
 
 const powerupContainer = document.getElementById(`powerup-container`)!;
 const powerupFill = document.getElementById(`powerup-fill`)!;
@@ -276,6 +277,7 @@ async function presentDialog(key: string): Promise<void> {
     };
     dialogBox.append(button);
     dialogBox.scrollTop = dialogBox.scrollHeight;
+    updateLineOpacities();
   });
 
   onEnd?.();
@@ -293,8 +295,20 @@ async function appendLine(line: string): Promise<void> {
     const c = line[i]!;
     lineText.append(c);
     dialogBox.scrollTop = dialogBox.scrollHeight;
+    updateLineOpacities();
     await wait(TEXT_DELAY_MS);
   }
+}
+
+function updateLineOpacities(): void {
+  const lines: NodeListOf<HTMLElement> = dialogBox.querySelectorAll(`.line`);
+  lines.forEach((n) => {
+    const yPos = Math.max(0, n.offsetTop - dialogBox.scrollTop);
+    if (dialogBox.scrollHeight < 300 || yPos > 100) {
+      return;
+    }
+    n.style.opacity = String(0.2 + (yPos / 100) * 0.8);
+  });
 }
 
 async function wait(ms: number): Promise<void> {
