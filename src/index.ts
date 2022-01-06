@@ -27,6 +27,7 @@ type Dialog = {
   onStart?: () => void;
   onEnd?: () => void;
   playerResponseInput?: true;
+  autoAdvance?: { nextDialogKey: string; waitMS: number };
 };
 
 type DialogResponse = {
@@ -92,20 +93,13 @@ const DIALOGS: { [key: string]: Dialog } = {
     playerResponseInput: true,
   },
   uniformBlocks: {
-    onEnd: () => {
-      setTimeout(() => window.activateUniformBlocks(10), 2000);
-      setTimeout(() => {
-        if (currentDialogKey !== `uniformBlocks`) {
-          return;
-        }
-        void presentDialog(`thanks`);
-      }, 10000);
-    },
+    onEnd: () => setTimeout(() => window.activateUniformBlocks(10), 2000),
     lines: [
       `Thank you!`,
       `Here, I can intercept the next 10 blocks and make them the same type.`,
     ],
     responses: [{ text: `Thanks!`, nextDialogKey: `thanks` }],
+    autoAdvance: { nextDialogKey: `thanks`, waitMS: 10000 },
   },
   thanks: {
     onStart: stopWavegen,
@@ -394,6 +388,7 @@ const DIALOGS: { [key: string]: Dialog } = {
       { text: `I Accept`, nextDialogKey: `accept` },
       { text: `I Decline`, nextDialogKey: `declined1` },
     ],
+    autoAdvance: { nextDialogKey: `declined1`, waitMS: 5000 },
     onEnd: () => {
       setTimeout(() => {
         if (currentDialogKey !== `noStop`) {
@@ -409,14 +404,7 @@ const DIALOGS: { [key: string]: Dialog } = {
       { text: `I Accept`, nextDialogKey: `accept` },
       { text: `I Decline`, nextDialogKey: `declined2` },
     ],
-    onEnd: () => {
-      setTimeout(() => {
-        if (currentDialogKey !== `declined1`) {
-          return;
-        }
-        void presentDialog(`declined2`);
-      }, 5000);
-    },
+    autoAdvance: { nextDialogKey: `declined2`, waitMS: 5000 },
   },
   declined2: {
     lines: [`3?`],
@@ -424,14 +412,7 @@ const DIALOGS: { [key: string]: Dialog } = {
       { text: `I Accept`, nextDialogKey: `accept` },
       { text: `I Decline`, nextDialogKey: `cannotBeReasonedWith` },
     ],
-    onEnd: () => {
-      setTimeout(() => {
-        if (currentDialogKey !== `declined2`) {
-          return;
-        }
-        void presentDialog(`cannotBeReasonedWith`);
-      }, 5000);
-    },
+    autoAdvance: { nextDialogKey: `cannotBeReasonedWith`, waitMS: 5000 },
   },
   accept: {
     lines: [`The offer has expired.`],
@@ -496,6 +477,7 @@ async function presentDialog(key: string): Promise<void> {
     onStart,
     onEnd,
     playerResponseInput,
+    autoAdvance,
   } = DIALOGS[key]!;
 
   onStart?.();
@@ -538,6 +520,16 @@ async function presentDialog(key: string): Promise<void> {
   });
 
   onEnd?.();
+
+  if (autoAdvance != null) {
+    const { nextDialogKey, waitMS } = autoAdvance;
+    setTimeout(() => {
+      if (currentDialogKey !== key) {
+        return;
+      }
+      void presentDialog(nextDialogKey);
+    }, waitMS);
+  }
 }
 
 async function appendLines(lines: string[]): Promise<void> {
