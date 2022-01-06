@@ -5,8 +5,9 @@ const TEXT_DELAY_MS = TEST ? 0 : 20;
 const CLEARS_BEFORE_DIALOG_OPENING = TEST ? 1 : 5;
 const TEST_OPENING_STEP = `incoming`;
 if (TEST) {
-    setTimeout(() => presentDialog(`opening2`));
+    setTimeout(() => presentDialog(`return`));
 }
+let personalityShifted = false;
 const DIALOGS = {
     disclaimer: {
         lines: [
@@ -149,6 +150,7 @@ const DIALOGS = {
             window.activateUniformBlocks(3);
             activatePowerupBar(0);
         },
+        onEnd: startPositiveMessages,
         lines: [
             `You got it!`,
             `That's all I can convert for now.`,
@@ -162,6 +164,7 @@ const DIALOGS = {
             resumeWavegen();
             activatePowerupBar(30);
         },
+        onEnd: startPositiveMessages,
         lines: [
             `Good call.`,
             `Here is a status bar for my energy. You can let me know when you want me to convert blocks by clicking the DEPLOY button.`,
@@ -193,7 +196,78 @@ const DIALOGS = {
         lines: [`Very well.`, `I wish you the best on your journey.`],
         responses: [],
     },
+    positive: {
+        possibleLines: [
+            [`Nice!`],
+            [`You're a pro at this!`],
+            [`Look out!`],
+            [`Great job!`],
+            [`That was a close one!`],
+            [`You've got this!`],
+            [`That was a good one!`],
+            [`It's a good thing you're here.`],
+            [`You're the best hacker I've ever seen!`],
+            [`You're crushing this!!!`],
+            [`The Valks security system doesn't stand a chance against you!`],
+            [`Amazing!`],
+        ],
+        responses: [],
+    },
+    gameOver: {
+        possibleLines: [
+            [`Oh no!`, `It's okay, you made great progress.`, `Try again!`],
+            [`It's okay.`, `You'll get it next time.`, `Try again!`],
+        ],
+        responses: [
+            {
+                text: `Let's try again`,
+                handler: () => {
+                    window.restartGame();
+                    void presentDialog(`tryAgain`);
+                },
+            },
+            { text: `I have to go` },
+        ],
+    },
+    tryAgain: {
+        onEnd: startPositiveMessages,
+        possibleLines: [
+            [`Yes! We'll get it this time!`],
+            [`We've got this!`],
+            [`Great! Let's do it!`],
+            [`Great!`],
+        ],
+        responses: [],
+    },
+    exit: {
+        possibleLines: [
+            [
+                `I understand.`,
+                `It's just...`,
+                `I hope you come back soon.`,
+                `It's been lonely in here.`,
+            ],
+            [`Come back soon!`],
+        ],
+        responses: [],
+    },
+    return: {
+        onEnd: startPositiveMessages,
+        possibleLines: [
+            [
+                `You're back!`,
+                `I was worried you had abandoned me in the labyrinth.`,
+                `I'm so glad you're back!`,
+                `Alright! Let's get back to it!`,
+            ],
+        ],
+        responses: [],
+    },
 };
+const possibleLineIndices = {};
+const hoverExitMessages = [
+    [`Wait!`, `Don't you want to try again?`, `You can't give up that easily!`],
+];
 const dialogBox = document.getElementById(`dialog-box`);
 dialogBox.onmousedown = (e) => e.stopPropagation();
 dialogBox.onscroll = updateLineOpacities;
@@ -208,16 +282,17 @@ setInterval(() => {
 }, 500);
 let currentDialogKey = null;
 async function presentDialog(key) {
-    if (key === currentDialogKey) {
-        return;
-    }
     currentDialogKey = key;
-    const { lines, responses, onStart, onEnd, playerResponseInput } = DIALOGS[key];
+    const { lines, possibleLines, responses, onStart, onEnd, playerResponseInput, } = DIALOGS[key];
     onStart?.();
     dialogBox.innerHTML = ``;
-    for (const line of lines) {
-        await appendLine(line);
-        await wait(LINE_DELAY_MS);
+    if (possibleLines != null) {
+        possibleLineIndices[key] = possibleLineIndices[key] ?? 0;
+        const i = possibleLineIndices[key]++ % possibleLines.length;
+        await appendLines(possibleLines[i]);
+    }
+    else if (lines != null) {
+        await appendLines(lines);
     }
     if (playerResponseInput) {
         const lineContainer = document.createElement(`div`);
@@ -244,6 +319,12 @@ async function presentDialog(key) {
         updateLineOpacities();
     });
     onEnd?.();
+}
+async function appendLines(lines) {
+    for (const line of lines) {
+        await appendLine(line);
+        await wait(LINE_DELAY_MS);
+    }
 }
 async function appendLine(line) {
     const lineContainer = document.createElement(`div`);
@@ -302,10 +383,19 @@ function sendGlyph(glyph) {
 }
 let timesCleared = 0;
 function clearedBlocks() {
-    if (++timesCleared >= CLEARS_BEFORE_DIALOG_OPENING &&
+    timesCleared++;
+    if (timesCleared >= CLEARS_BEFORE_DIALOG_OPENING &&
         currentDialogKey == null) {
         void presentDialog(TEST ? TEST_OPENING_STEP : `incoming`);
+        return;
     }
+    if (currentDialogKey === `positive` && timesCleared % 5 === 0) {
+        void presentDialog(`positive`);
+    }
+}
+function startPositiveMessages() {
+    timesCleared = 0;
+    currentDialogKey = `positive`;
 }
 let powerupValue = 0;
 function activatePowerupBar(initialValue) {

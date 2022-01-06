@@ -344,12 +344,14 @@ function isInfringing(hex) {
 function checkGameOver() {
   for (var i = 0; i < MainHex.sides; i++) {
     if (isInfringing(MainHex)) {
+      // if (true) {
       // $.get("http://54.183.184.126/" + String(score));
       if (highscores.indexOf(score) == -1) {
         highscores.push(score);
       }
-      writeHighScores();
-      gameOverDisplay();
+      // writeHighScores();
+      // gameOverDisplay();
+      presentDialog(`gameOver`);
       return true;
     }
   }
