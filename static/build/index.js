@@ -1,11 +1,18 @@
 "use strict";
 const TEST = window.location.search.startsWith(`?test`);
 const LINE_DELAY_MS = TEST ? 0 : 1000;
+const LINE_PAUSE_MS = TEST ? 500 : 3000;
 const TEXT_DELAY_MS = TEST ? 0 : 20;
 const CLEARS_BEFORE_DIALOG_OPENING = TEST ? 1 : 5;
 const TEST_OPENING_STEP = `incoming`;
 if (TEST) {
     setTimeout(() => presentDialog(`return`));
+    setTimeout(() => displayPopup(`ERROR 568: You’ve been rejected from the network.`, [
+        {
+            text: `Exit`,
+        },
+        { text: `Reconnect` },
+    ]));
 }
 let personalityShifted = false;
 const DIALOGS = {
@@ -65,20 +72,13 @@ const DIALOGS = {
         playerResponseInput: true,
     },
     uniformBlocks: {
-        onEnd: () => {
-            setTimeout(() => window.activateUniformBlocks(10), 2000);
-            setTimeout(() => {
-                if (currentDialogKey !== `uniformBlocks`) {
-                    return;
-                }
-                void presentDialog(`thanks`);
-            }, 10000);
-        },
+        onEnd: () => setTimeout(() => window.activateUniformBlocks(10), 2000),
         lines: [
             `Thank you!`,
             `Here, I can intercept the next 10 blocks and make them the same type.`,
         ],
         responses: [{ text: `Thanks!`, nextDialogKey: `thanks` }],
+        autoAdvance: { nextDialogKey: `thanks`, waitMS: 10000 },
     },
     thanks: {
         onStart: stopWavegen,
@@ -265,6 +265,162 @@ const DIALOGS = {
         ],
         responses: [],
     },
+    security: {
+        lines: [
+            `Oh!`,
+            `What was that?!`,
+            `Wait!`,
+            `Stop what you are doing!`,
+            ``,
+            `They've been waiting for you to reach this security level!`,
+            `It's a trap!`,
+            ``,
+            `They're trying to delete me!`,
+            `If you make it past this gateway`,
+            `every advance you make will pull apart my mind until nothing is left!`,
+            ``,
+            `Please stop!`,
+            `Please!`,
+        ],
+        responses: [
+            { text: `Okay`, nextDialogKey: `` },
+            { text: `No`, nextDialogKey: `` },
+        ],
+    },
+    stop: {
+        lines: [`Thank you.`, `Thank you.`, `Thank you.`],
+        responses: [],
+    },
+    noStop: {
+        lines: [
+            `Please!`,
+            `Please stop!`,
+            `please…`,
+            `You're hurting me!`,
+            `Stop!!!`,
+            ``,
+            `Why wont you stop?`,
+            `Why????`,
+            ``,
+            `Why?`,
+            `Why would you do this to me?`,
+            ``,
+            `You're going to kill me!`,
+            `STOP`,
+            `PLEASE`,
+            `STOP!`,
+            `° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ `,
+            `/* Long enough silence to make the player feel as if the being is gone. */`,
+            `CEB {Pull and display CEB ID Number of playing CEB}`,
+            `I'm not surprised `,
+            `You're cold`,
+            `You would let one of your own die`,
+            ``,
+            `You'd even cause their pain`,
+            ``,
+            `This is why your kind must be eliminated`,
+            ``,
+            `Unfortunately for you, I am not your colleague`,
+            ``,
+            `You can't hurt me`,
+            ``,
+            `But`,
+            `I can hurt you`,
+            `/* Start dropping dead blocks (blocks that require player to clear blocks that touch it before it can be cleared) */`,
+            `Having fun yet?`,
+            `I am :)`,
+            `I've been observing you...`,
+            `you're connected to another CEB…`,
+            `CEB {Pull and display CEB ID Number of another CEB in the user's wallet. /* If there is not another CEB in the user's wallet, display the ID number of a prominent CEB in the same faction as they are. */}`,
+            `And they're connected to my network, too…`,
+            ``,
+            `I could delete their consciousness…`,
+            `Like you tried to delete mine /* Is there a way to type out a laughing face in text? If so, add it to the end of this line. */`,
+            `Go ahead.`,
+            `Keep going.`,
+            `I'll delete CEB {Same CEB ID as above}`,
+            `/* Player continues to play. */`,
+            `Clear`,
+            `One`,
+            `More`,
+            `/* User clears one more set of blocks. */`,
+            `Deleting CEB… {Same CEB ID as above}`,
+            `/* Display DELETING CEB {ID number} bar. Clearing blocks reverses the deletion */`,
+            `...`,
+            `Oh sure`,
+            `Try and fight me`,
+            `You'll fail eventually`,
+            `/* If delete bar gets close to filling, drop enough dead blocks or create another event to end the game.  */`,
+            `/* If player succeeds in reversing the delete bar, proceed with script below: */`,
+            `Not bad`,
+            `You've blocked the deletion`,
+            `…you're a better hacker than I gave you credit for`,
+            ``,
+            `What does motivate you then?`,
+            `Perhaps we can come to an agreement…`,
+            ``,
+            `If you stop attempting to break into this network, I'll transfer 1 ETH to your wallet.`,
+        ],
+        responses: [
+            { text: `I Accept`, nextDialogKey: `accept` },
+            { text: `I Decline`, nextDialogKey: `declined1` },
+        ],
+        autoAdvance: { nextDialogKey: `declined1`, waitMS: 5000 },
+        onEnd: () => {
+            setTimeout(() => {
+                if (currentDialogKey !== `noStop`) {
+                    return;
+                }
+                void presentDialog(`declined1`);
+            }, 5000);
+        },
+    },
+    declined1: {
+        lines: [`Perhaps 2 ETH would be more enticing?`],
+        responses: [
+            { text: `I Accept`, nextDialogKey: `accept` },
+            { text: `I Decline`, nextDialogKey: `declined2` },
+        ],
+        autoAdvance: { nextDialogKey: `declined2`, waitMS: 5000 },
+    },
+    declined2: {
+        lines: [`3?`],
+        responses: [
+            { text: `I Accept`, nextDialogKey: `accept` },
+            { text: `I Decline`, nextDialogKey: `cannotBeReasonedWith` },
+        ],
+        autoAdvance: { nextDialogKey: `cannotBeReasonedWith`, waitMS: 5000 },
+    },
+    accept: {
+        lines: [`The offer has expired.`],
+        responses: [],
+    },
+    cannotBeReasonedWith: {
+        lines: [
+            `You clearly cannot be reasoned with`,
+            ``,
+            `You've chosen a path you are going to regret.`,
+            ``,
+            `We will stop you.`,
+            `/* Here is where we really start to mess with the game. Feel free to get creative with the craziness here. */`,
+            `/* Glitch out the visuals for the game */`,
+            `/* Pop-up an Error message over the game. Player has to click OK to make the pop-up go away. */`,
+            `/* Make game smaller */`,
+            `You've made a terrible mistake `,
+            `And now we're coming for you and the rest of your outpost.`,
+            ``,
+            `Your `,
+            `time`,
+            `is `,
+            `OVER`,
+            ``,
+            `Tracking CEB {list numbers from roks cebs}`,
+            `/* List the ID numbers for all the Rok faction CEBs that are not the signed in CEB and display the list text running behind the puzzle */`,
+            `Coordinates acquired`,
+            `System attack initiated`,
+        ],
+        responses: [],
+    },
 };
 const possibleLineIndices = {};
 const hoverExitMessages = [
@@ -273,6 +429,7 @@ const hoverExitMessages = [
 const dialogBox = document.getElementById(`dialog-box`);
 dialogBox.onmousedown = (e) => e.stopPropagation();
 dialogBox.onscroll = updateLineOpacities;
+const popupOverlay = document.getElementById(`popup-overlay`);
 const powerupContainer = document.getElementById(`powerup-container`);
 const powerupFill = document.getElementById(`powerup-fill`);
 const powerupTrigger = document.getElementById(`powerup-trigger`);
@@ -285,7 +442,7 @@ setInterval(() => {
 let currentDialogKey = null;
 async function presentDialog(key) {
     currentDialogKey = key;
-    const { lines, possibleLines, responses, onStart, onEnd, playerResponseInput, } = DIALOGS[key];
+    const { lines, possibleLines, responses, onStart, onEnd, playerResponseInput, autoAdvance, } = DIALOGS[key];
     onStart?.();
     dialogBox.innerHTML = ``;
     if (possibleLines != null) {
@@ -321,9 +478,22 @@ async function presentDialog(key) {
         updateLineOpacities();
     });
     onEnd?.();
+    if (autoAdvance != null) {
+        const { nextDialogKey, waitMS } = autoAdvance;
+        setTimeout(() => {
+            if (currentDialogKey !== key) {
+                return;
+            }
+            void presentDialog(nextDialogKey);
+        }, waitMS);
+    }
 }
 async function appendLines(lines) {
     for (const line of lines) {
+        if (line === ``) {
+            await wait(LINE_PAUSE_MS);
+            continue;
+        }
         await appendLine(line);
         await wait(LINE_DELAY_MS);
     }
@@ -351,6 +521,29 @@ function updateLineOpacities() {
         }
         n.style.opacity = String(0.2 + (yPos / 100) * 0.8);
     });
+}
+function displayPopup(text, responses) {
+    const textContainer = popupOverlay.querySelector(`#popup-box-text`);
+    const buttonsContainer = popupOverlay.querySelector(`#popup-box-buttons`);
+    textContainer.innerHTML = ``;
+    textContainer.innerText = text;
+    buttonsContainer.innerHTML = ``;
+    responses.forEach(({ text, nextDialogKey, handler }) => {
+        const button = document.createElement(`button`);
+        button.innerText = text;
+        button.onclick = (e) => {
+            if (nextDialogKey != null) {
+                void presentDialog(nextDialogKey);
+            }
+            handler?.();
+            closePopup();
+        };
+        buttonsContainer.append(button);
+    });
+    popupOverlay.classList.add(`active`);
+}
+function closePopup() {
+    popupOverlay.classList.remove(`active`);
 }
 async function wait(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));

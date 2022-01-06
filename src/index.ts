@@ -16,6 +16,14 @@ const TEST_OPENING_STEP = `incoming`;
 
 if (TEST) {
   setTimeout(() => presentDialog(`return`));
+  setTimeout(() =>
+    displayPopup(`ERROR 568: You’ve been rejected from the network.`, [
+      {
+        text: `Exit`,
+      },
+      { text: `Reconnect` },
+    ]),
+  );
 }
 
 let personalityShifted = false;
@@ -456,6 +464,8 @@ const dialogBox = document.getElementById(`dialog-box`)!;
 dialogBox.onmousedown = (e) => e.stopPropagation();
 dialogBox.onscroll = updateLineOpacities;
 
+const popupOverlay = document.getElementById(`popup-overlay`)!;
+
 const powerupContainer = document.getElementById(`powerup-container`)!;
 const powerupFill = document.getElementById(`powerup-fill`)!;
 const powerupTrigger = document.getElementById(`powerup-trigger`)!;
@@ -569,6 +579,35 @@ function updateLineOpacities(): void {
     }
     n.style.opacity = String(0.2 + (yPos / 100) * 0.8);
   });
+}
+
+function displayPopup(text: string, responses: DialogResponse[]): void {
+  const textContainer: HTMLDivElement =
+    popupOverlay.querySelector(`#popup-box-text`)!;
+  const buttonsContainer: HTMLDivElement =
+    popupOverlay.querySelector(`#popup-box-buttons`)!;
+
+  textContainer.innerHTML = ``;
+  textContainer.innerText = text;
+
+  buttonsContainer.innerHTML = ``;
+  responses.forEach(({ text, nextDialogKey, handler }) => {
+    const button = document.createElement(`button`);
+    button.innerText = text;
+    button.onclick = (e) => {
+      if (nextDialogKey != null) {
+        void presentDialog(nextDialogKey);
+      }
+      handler?.();
+      closePopup();
+    };
+    buttonsContainer.append(button);
+  });
+
+  popupOverlay.classList.add(`active`);
+}
+function closePopup(): void {
+  popupOverlay.classList.remove(`active`);
 }
 
 async function wait(ms: number): Promise<void> {

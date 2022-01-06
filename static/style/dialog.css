@@ -27,7 +27,7 @@
 #dialog-box .dialog-response {
   display: block;
   margin-top: 20px;
-  padding: 10px;
+  padding: 10px 16px;
   border: 2px solid #53ecf8;
   cursor: pointer;
   font-size: 20px;
@@ -76,6 +76,53 @@
 #powerup-trigger {
   margin-top: 20px;
   padding: 10px;
+  border: 2px solid #53ecf8;
+  cursor: pointer;
+  font-size: 20px;
+  color: #53ecf8;
+}
+
+#popup-overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#popup-overlay:not(.active) {
+  display: none;
+}
+
+#popup-overlay #popup-box {
+  text-align: center;
+  width: 600px;
+  padding: 30px 40px;
+  border: 2px solid #53ecf8;
+  background-color: black;
+  font-size: 20px;
+  color: #53ecf8;
+}
+
+#popup-overlay #popup-box #popup-box-text {
+}
+
+#popup-overlay #popup-box #popup-box-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+#popup-overlay #popup-box #popup-box-buttons button {
+  display: block;
+  margin: 0 20px;
+  padding: 10px 16px;
   border: 2px solid #53ecf8;
   cursor: pointer;
   font-size: 20px;
