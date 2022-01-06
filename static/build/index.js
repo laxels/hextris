@@ -230,6 +230,7 @@ const DIALOGS = {
         ],
     },
     tryAgain: {
+        onStart: () => activatePowerupBar(0),
         onEnd: startPositiveMessages,
         possibleLines: [
             [`Yes! We'll get it this time!`],
@@ -252,6 +253,7 @@ const DIALOGS = {
         responses: [],
     },
     return: {
+        onStart: () => activatePowerupBar(0),
         onEnd: startPositiveMessages,
         possibleLines: [
             [
@@ -398,10 +400,14 @@ function startPositiveMessages() {
     currentDialogKey = `positive`;
 }
 let powerupValue = 0;
+let powerupInterval = null;
 function activatePowerupBar(initialValue) {
     updatePowerupBar(initialValue);
     powerupContainer.classList.remove(`hidden`);
-    setInterval(() => {
+    if (powerupInterval != null) {
+        clearInterval(powerupInterval);
+    }
+    powerupInterval = setInterval(() => {
         updatePowerupBar(Math.min(powerupValue + 10, 100));
     }, 3000);
 }
