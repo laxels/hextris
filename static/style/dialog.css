@@ -3,8 +3,16 @@
   left: 20px;
   top: 200px;
   width: 300px;
+  max-height: 500px;
   font-size: 20px;
   color: #53ecf8;
+  overflow: auto;
+
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+#dialog-box::-webkit-scrollbar {
+  display: none;
 }
 
 #dialog-box .line {

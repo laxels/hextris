@@ -12,6 +12,10 @@ const TEXT_DELAY_MS = TEST ? 0 : 20;
 const CLEARS_BEFORE_DIALOG_OPENING = TEST ? 1 : 5;
 const TEST_OPENING_STEP = `incoming`;
 
+if (TEST) {
+  setTimeout(() => presentDialog(`opening2`));
+}
+
 type Dialog = {
   lines: string[];
   responses: DialogResponse[];
@@ -35,8 +39,9 @@ const DIALOGS: { [key: string]: Dialog } = {
     responses: [{ text: `Enter` }, { text: `Cancel` }],
   },
   incoming: {
+    onEnd: () => setTimeout(() => presentDialog(`opening0`), 3000),
     lines: [`INCOMING MESSAGE`],
-    responses: [{ text: `Receive message`, nextDialogKey: `opening0` }],
+    responses: [],
   },
   opening0: {
     onStart: stopWavegen,
@@ -270,6 +275,7 @@ async function presentDialog(key: string): Promise<void> {
       handler?.();
     };
     dialogBox.append(button);
+    dialogBox.scrollTop = dialogBox.scrollHeight;
   });
 
   onEnd?.();
@@ -286,6 +292,7 @@ async function appendLine(line: string): Promise<void> {
   for (let i = 0; i < line.length; i++) {
     const c = line[i]!;
     lineText.append(c);
+    dialogBox.scrollTop = dialogBox.scrollHeight;
     await wait(TEXT_DELAY_MS);
   }
 }
