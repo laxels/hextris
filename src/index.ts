@@ -14,16 +14,10 @@ const TEXT_DELAY_MS = TEST ? 0 : 20;
 const CLEARS_BEFORE_DIALOG_OPENING = TEST ? 1 : 5;
 const TEST_OPENING_STEP = `incoming`;
 
+const HIGHER_SECURITY_SCORE = TEST ? 20 : 3000;
+
 if (TEST) {
   setTimeout(() => presentDialog(`return`));
-  setTimeout(() =>
-    displayPopup(`ERROR 568: You’ve been rejected from the network.`, [
-      {
-        text: `Exit`,
-      },
-      { text: `Reconnect` },
-    ]),
-  );
 }
 
 let personalityShifted = false;
@@ -297,6 +291,7 @@ const DIALOGS: { [key: string]: Dialog } = {
     responses: [],
   },
   security: {
+    onStart: stopWavegen,
     lines: [
       `Oh!`,
       `What was that?!`,
@@ -314,15 +309,24 @@ const DIALOGS: { [key: string]: Dialog } = {
       `Please!`,
     ],
     responses: [
-      { text: `Okay`, nextDialogKey: `` },
-      { text: `No`, nextDialogKey: `` },
+      { text: `Okay`, nextDialogKey: `stop` },
+      { text: `No`, nextDialogKey: `noStop0` },
     ],
   },
   stop: {
     lines: [`Thank you.`, `Thank you.`, `Thank you.`],
     responses: [],
+    onEnd: () =>
+      setTimeout(
+        () =>
+          displayPopup(`ERROR 568: You've been rejected from the network.`, [
+            { text: `EXIT` },
+            { text: `RECONNECT` },
+          ]),
+        LINE_DELAY_MS,
+      ),
   },
-  noStop: {
+  noStop0: {
     lines: [
       `Please!`,
       `Please stop!`,
@@ -341,7 +345,9 @@ const DIALOGS: { [key: string]: Dialog } = {
       `PLEASE`,
       `STOP!`,
       `° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ ° Ю°ББ ћΣÅŒŇΞ ΞŇΠ `,
-      `/* Long enough silence to make the player feel as if the being is gone. */`,
+      ``,
+      ``,
+      ``,
       `CEB {Pull and display CEB ID Number of playing CEB}`,
       `I'm not surprised `,
       `You're cold`,
@@ -357,6 +363,13 @@ const DIALOGS: { [key: string]: Dialog } = {
       ``,
       `But`,
       `I can hurt you`,
+    ],
+    responses: [],
+    onEnd: () => setTimeout(() => presentDialog(`noStop1`), 3000),
+  },
+  noStop1: {
+    onStart: resumeWavegen,
+    lines: [
       `/* Start dropping dead blocks (blocks that require player to clear blocks that touch it before it can be cleared) */`,
       `Having fun yet?`,
       `I am :)`,
@@ -397,14 +410,6 @@ const DIALOGS: { [key: string]: Dialog } = {
       { text: `I Decline`, nextDialogKey: `declined1` },
     ],
     autoAdvance: { nextDialogKey: `declined1`, waitMS: 5000 },
-    onEnd: () => {
-      setTimeout(() => {
-        if (currentDialogKey !== `noStop`) {
-          return;
-        }
-        void presentDialog(`declined1`);
-      }, 5000);
-    },
   },
   declined1: {
     lines: [`Perhaps 2 ETH would be more enticing?`],
@@ -425,6 +430,15 @@ const DIALOGS: { [key: string]: Dialog } = {
   accept: {
     lines: [`The offer has expired.`],
     responses: [],
+    onEnd: () =>
+      setTimeout(
+        () =>
+          displayPopup(`ERROR 568: You've been rejected from the network.`, [
+            { text: `EXIT` },
+            { text: `RECONNECT` },
+          ]),
+        LINE_DELAY_MS,
+      ),
   },
   cannotBeReasonedWith: {
     lines: [
@@ -572,7 +586,10 @@ async function appendLine(line: string): Promise<void> {
 
 function updateLineOpacities(): void {
   const lines: NodeListOf<HTMLElement> = dialogBox.querySelectorAll(`.line`);
-  lines.forEach((n) => {
+  lines.forEach((n, i) => {
+    if (i === lines.length - 1) {
+      return;
+    }
     const yPos = Math.max(0, n.offsetTop - dialogBox.scrollTop);
     if (dialogBox.scrollHeight < 300 || yPos > 100) {
       return;
@@ -662,6 +679,25 @@ function clearedBlocks(): void {
   if (currentDialogKey === `positive` && timesCleared % 5 === 0) {
     void presentDialog(`positive`);
   }
+}
+
+let currentScore = 0;
+function registerScore(score: number): void {
+  currentScore = score;
+  if (currentScore >= HIGHER_SECURITY_SCORE) {
+    triggerPersonalityShift();
+  }
+}
+
+function triggerPersonalityShift(): void {
+  if (
+    personalityShifted ||
+    !_.includes([`positive`, `alone`], currentDialogKey)
+  ) {
+    return;
+  }
+  personalityShifted = true;
+  void presentDialog(`security`);
 }
 
 function startPositiveMessages(): void {

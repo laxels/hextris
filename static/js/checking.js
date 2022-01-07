@@ -108,4 +108,5 @@ function consolidateBlocks(hex, side, index) {
 
   deletedBlocks.filter((b) => b.glyph).forEach((b) => sendGlyph(b.glyph));
   clearedBlocks();
+  registerScore(score);
 }
