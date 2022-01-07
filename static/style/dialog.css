@@ -138,3 +138,39 @@
   font-size: 32px;
   color: #53ecf8;
 }
+#game-message:not(.active) {
+  display: none;
+}
+
+#delete-message {
+  position: fixed;
+  top: 100px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 32px;
+  color: red;
+}
+#delete-message:not(.active) {
+  display: none;
+}
+
+#delete-bar {
+  position: fixed;
+  top: 160px;
+  left: 50%;
+  width: 400px;
+  margin-left: -200px;
+  height: 50px;
+  border: 2px solid red;
+  box-sizing: border-box;
+}
+#delete-bar:not(.active) {
+  display: none;
+}
+#delete-bar-inner {
+  width: 0;
+  height: 100%;
+  background-color: red;
+  transition: width 0.5s;
+}

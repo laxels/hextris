@@ -19,8 +19,7 @@ const HIGHER_SECURITY_SCORE = TEST ? 20 : 3000;
 
 if (TEST) {
   setTimeout(() => {
-    stopWavegen();
-    void presentDialog(`noStop0`);
+    void presentDialog(`noStop3`);
   });
 }
 
@@ -393,15 +392,19 @@ const DIALOGS: { [key: string]: Dialog } = {
     onEnd: () => startClearedBlockCounter(`noStop3`),
   },
   noStop3: {
+    onStart: () => displayDeleteMessageAndBar(`DELETING CEB`),
     lines: [
       `Deleting CEB… {Same CEB ID as above}`,
-      `/* Display DELETING CEB {ID number} bar. Clearing blocks reverses the deletion */`,
       `...`,
       `Oh sure`,
       `Try and fight me`,
       `You'll fail eventually`,
       `/* If delete bar gets close to filling, drop enough dead blocks or create another event to end the game.  */`,
-      `/* If player succeeds in reversing the delete bar, proceed with script below: */`,
+    ],
+    responses: [],
+  },
+  noStop4: {
+    lines: [
       `Not bad`,
       `You've blocked the deletion`,
       `…you're a better hacker than I gave you credit for`,
@@ -473,6 +476,9 @@ const hoverExitMessages = [
 ];
 
 const gameMessage = document.getElementById(`game-message`)!;
+const deleteMessage = document.getElementById(`delete-message`)!;
+const deleteBar = document.getElementById(`delete-bar`)!;
+const deleteBarInner = document.getElementById(`delete-bar-inner`)!;
 
 const dialogBox = document.getElementById(`dialog-box`)!;
 dialogBox.onmousedown = (e) => e.stopPropagation();
@@ -601,6 +607,37 @@ function updateLineOpacities(): void {
 function displayGameMessage(msg: string): void {
   gameMessage.innerHTML = ``;
   gameMessage.innerText = msg;
+  gameMessage.classList.add(`active`);
+}
+function hideGameMessage(): void {
+  gameMessage.classList.remove(`active`);
+}
+
+function displayDeleteMessageAndBar(msg: string): void {
+  deleteMessage.innerHTML = ``;
+  deleteMessage.innerText = msg;
+  deleteMessage.classList.add(`active`);
+  deleteBar.classList.add(`active`);
+  fillDeleteBar();
+}
+function hideDeleteMessageAndBar(): void {
+  deleteMessage.classList.remove(`active`);
+  deleteBar.classList.remove(`active`);
+}
+
+let deleteProgress = 0;
+function fillDeleteBar(): void {
+  if (deleteProgress >= 100 || deleteProgress < 0) {
+    return;
+  }
+  deleteProgress += Math.round(Math.random() * 5);
+  deleteProgress = Math.min(deleteProgress, 100);
+  deleteBarInner.style.width = `${deleteProgress}%`;
+  if (deleteProgress < 100) {
+    setTimeout(fillDeleteBar, Math.random() * 3000);
+  } else {
+    setTimeout(hideDeleteMessageAndBar, 2000);
+  }
 }
 
 function displayPopup(text: string, responses: DialogResponse[]): void {
@@ -690,13 +727,26 @@ function clearedBlocks(): void {
 
   if (currentDialogKey === `positive` && timesCleared % 5 === 0) {
     void presentDialog(`positive`);
+    return;
   }
 
-  if (currentDialogKey === `noStop2` && timesCleared === 1) {
+  if (currentDialogKey === `noStop2` && timesCleared === 5) {
     void presentDialog(`noStop2`);
+    return;
   }
   if (currentDialogKey === `noStop3` && timesCleared === 1) {
     void presentDialog(`noStop3`);
+    return;
+  }
+
+  if (deleteProgress > 0) {
+    deleteProgress -= 30;
+    deleteBarInner.style.width = `${Math.max(deleteProgress, 0)}%`;
+    if (currentDialogKey === `noStop3` && deleteProgress < 0) {
+      hideDeleteMessageAndBar();
+      void presentDialog(`noStop4`);
+    }
+    return;
   }
 }
 
@@ -766,6 +816,6 @@ function resumeWavegen(): void {
 }
 
 setTimeout(() => {
-  displayGameMessage(`BREAK INTO THE ROKS NETWORK`);
+  // displayGameMessage(`BREAK INTO THE ROKS NETWORK`);
   window.startGame();
 });
