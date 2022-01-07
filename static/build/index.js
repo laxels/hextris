@@ -675,7 +675,7 @@ function clearedBlocks() {
         return;
     }
     if (deleteProgress > 0) {
-        deleteProgress -= 30;
+        deleteProgress -= 20;
         deleteBarInner.style.width = `${Math.max(deleteProgress, 0)}%`;
         if (currentDialogKey === `noStop3` && deleteProgress < 0) {
             hideDeleteMessageAndBar();
