@@ -16,7 +16,7 @@ const TEXT_DELAY_MS = TEST ? 0 : 20;
 const CLEARS_BEFORE_DIALOG_OPENING = TEST ? 1 : 5;
 const TEST_OPENING_STEP = `incoming`;
 
-const HIGHER_SECURITY_SCORE = TEST ? 20 : 3000;
+const HIGHER_SECURITY_SCORE = TEST ? 20 : 10000;
 
 if (TEST) {
   setTimeout(() => {
