@@ -8,8 +8,12 @@ function search(twoD, oneD) {
   return false;
 }
 
-function floodFill(hex, side, index, deleting) {
-  if (hex.blocks[side] === undefined || hex.blocks[side][index] === undefined)
+function floodFill(hex, side, index, deleting, undeading) {
+  if (
+    hex.blocks[side] === undefined ||
+    hex.blocks[side][index] === undefined ||
+    hex.blocks[side][index].dead
+  )
     return;
 
   //store the block type
@@ -32,14 +36,20 @@ function floodFill(hex, side, index, deleting) {
       if (hex.blocks[curSide][curIndex] !== undefined) {
         // checking equivalency of block type, if its already been explored, and if it isn't already deleted
         if (
-          hex.blocks[curSide][curIndex].blockType == blockType &&
+          hex.blocks[curSide][curIndex].blockType === blockType &&
+          !hex.blocks[curSide][curIndex].dead &&
           search(deleting, [curSide, curIndex]) === false &&
           hex.blocks[curSide][curIndex].deleted === 0
         ) {
           //add this to the array of already explored
           deleting.push([curSide, curIndex]);
           //recall with next block explored
-          floodFill(hex, curSide, curIndex, deleting);
+          floodFill(hex, curSide, curIndex, deleting, undeading);
+        } else if (
+          hex.blocks[curSide][curIndex].dead &&
+          search(undeading, [curSide, curIndex]) === false
+        ) {
+          undeading.push([curSide, curIndex]);
         }
       }
     }
@@ -47,25 +57,32 @@ function floodFill(hex, side, index, deleting) {
 }
 
 function consolidateBlocks(hex, side, index) {
-  var deleting = [];
-  var deletedBlocks = [];
+  const deleting = [];
+  const deletedBlocks = [];
+  const undeading = [];
   //add start case
   deleting.push([side, index]);
   //fill deleting
-  floodFill(hex, side, index, deleting);
+  floodFill(hex, side, index, deleting, undeading);
   //make sure there are more than 3 blocks to be deleted
   if (deleting.length < 3) {
     return;
   }
 
-  var i;
-  for (i = 0; i < deleting.length; i++) {
-    var arr = deleting[i];
+  for (let i = 0; i < deleting.length; i++) {
+    const arr = deleting[i];
     //just making sure the arrays are as they should be
-    if (arr !== undefined && arr.length == 2) {
+    if (arr != null && arr.length == 2) {
       //mark as deleted
       hex.blocks[arr[0]][arr[1]].deleted = 1;
       deletedBlocks.push(hex.blocks[arr[0]][arr[1]]);
+    }
+  }
+  for (let i = 0; i < undeading.length; i++) {
+    const arr = undeading[i];
+    //just making sure the arrays are as they should be
+    if (arr != null && arr.length == 2) {
+      delete hex.blocks[arr[0]][arr[1]].dead;
     }
   }
 

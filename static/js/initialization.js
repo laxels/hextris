@@ -8,6 +8,7 @@ function initialize(a) {
   window.blockTypes = ["solid", "lined", "empty"];
   // window.blockTypes = ["empty"];
   window.colors = ["#53ECF8"];
+  window.deadColor = `rgba(83, 236, 248, 0.2)`;
   window.hexColorsToTintedColors = {
     "#53ECF8": "rgb(83,236,248)",
   };

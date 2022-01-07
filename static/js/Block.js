@@ -33,6 +33,10 @@ function Block(fallingLane, blockType, iter, distFromHex, settled) {
   //distance from center hex
   this.distFromHex = distFromHex || settings.startDist * settings.scale;
 
+  if (deadBlocksEnabled && Math.random() < 0.25) {
+    this.dead = true;
+  }
+
   if (uniformBlocksLeft > 0) {
     this.blockType = `empty`;
     uniformBlocksLeft--;
@@ -157,8 +161,8 @@ function Block(fallingLane, blockType, iter, distFromHex, settled) {
       p2w = rotatePoint(this.widthWide / 2, drawHeight / 2, this.angle);
     }
 
-    let drawColor = this.color;
-    ctx.fillStyle = this.color;
+    let drawColor = this.dead ? window.deadColor : this.color;
+    ctx.fillStyle = this.dead ? window.deadColor : this.color;
     if (this.deleted) {
       drawColor = "#FFF";
       ctx.fillStyle = "#FFF";
@@ -325,4 +329,9 @@ function enableGlyphs() {
 let uniformBlocksLeft = 0;
 function activateUniformBlocks(n) {
   uniformBlocksLeft = n;
+}
+
+let deadBlocksEnabled = false;
+function enableDeadBlocks() {
+  deadBlocksEnabled = true;
 }

@@ -7,7 +7,10 @@ const CLEARS_BEFORE_DIALOG_OPENING = TEST ? 1 : 5;
 const TEST_OPENING_STEP = `incoming`;
 const HIGHER_SECURITY_SCORE = TEST ? 20 : 3000;
 if (TEST) {
-    setTimeout(() => presentDialog(`return`));
+    setTimeout(() => {
+        stopWavegen();
+        void presentDialog(`noStop0`);
+    });
 }
 let personalityShifted = false;
 const DIALOGS = {
@@ -286,10 +289,7 @@ const DIALOGS = {
     stop: {
         lines: [`Thank you.`, `Thank you.`, `Thank you.`],
         responses: [],
-        onEnd: () => setTimeout(() => displayPopup(`ERROR 568: You've been rejected from the network.`, [
-            { text: `EXIT` },
-            { text: `RECONNECT` },
-        ]), LINE_DELAY_MS),
+        onEnd: () => setTimeout(displayErrorPopup, LINE_DELAY_MS),
     },
     noStop0: {
         lines: [
@@ -330,12 +330,16 @@ const DIALOGS = {
             `I can hurt you`,
         ],
         responses: [],
-        onEnd: () => setTimeout(() => presentDialog(`noStop1`), 3000),
+        onEnd: () => {
+            setTimeout(() => {
+                resumeWavegen();
+                window.enableDeadBlocks();
+            }, 1000);
+            setTimeout(() => presentDialog(`noStop1`), 5000);
+        },
     },
     noStop1: {
-        onStart: resumeWavegen,
         lines: [
-            `/* Start dropping dead blocks (blocks that require player to clear blocks that touch it before it can be cleared) */`,
             `Having fun yet?`,
             `I am :)`,
             `I've been observing you...`,
@@ -344,15 +348,21 @@ const DIALOGS = {
             `And they're connected to my network, too…`,
             ``,
             `I could delete their consciousness…`,
-            `Like you tried to delete mine /* Is there a way to type out a laughing face in text? If so, add it to the end of this line. */`,
+            `Like you tried to delete mine 😂 😂 😂`,
             `Go ahead.`,
             `Keep going.`,
             `I'll delete CEB {Same CEB ID as above}`,
-            `/* Player continues to play. */`,
-            `Clear`,
-            `One`,
-            `More`,
-            `/* User clears one more set of blocks. */`,
+        ],
+        responses: [],
+        onEnd: () => startClearedBlockCounter(`noStop2`),
+    },
+    noStop2: {
+        lines: [`Clear`, `One`, `More`],
+        responses: [],
+        onEnd: () => startClearedBlockCounter(`noStop3`),
+    },
+    noStop3: {
+        lines: [
             `Deleting CEB… {Same CEB ID as above}`,
             `/* Display DELETING CEB {ID number} bar. Clearing blocks reverses the deletion */`,
             `...`,
@@ -395,10 +405,7 @@ const DIALOGS = {
     accept: {
         lines: [`The offer has expired.`],
         responses: [],
-        onEnd: () => setTimeout(() => displayPopup(`ERROR 568: You've been rejected from the network.`, [
-            { text: `EXIT` },
-            { text: `RECONNECT` },
-        ]), LINE_DELAY_MS),
+        onEnd: () => setTimeout(displayErrorPopup, LINE_DELAY_MS),
     },
     cannotBeReasonedWith: {
         lines: [
@@ -553,6 +560,12 @@ function displayPopup(text, responses) {
 function closePopup() {
     popupOverlay.classList.remove(`active`);
 }
+function displayErrorPopup() {
+    displayPopup(`ERROR 568: You've been rejected from the network.`, [
+        { text: `EXIT` },
+        { text: `RECONNECT`, handler: window.restartGame },
+    ]);
+}
 async function wait(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -595,6 +608,16 @@ function clearedBlocks() {
     if (currentDialogKey === `positive` && timesCleared % 5 === 0) {
         void presentDialog(`positive`);
     }
+    if (currentDialogKey === `noStop2` && timesCleared === 1) {
+        void presentDialog(`noStop2`);
+    }
+    if (currentDialogKey === `noStop3` && timesCleared === 1) {
+        void presentDialog(`noStop3`);
+    }
+}
+function startClearedBlockCounter(key) {
+    timesCleared = 0;
+    currentDialogKey = key;
 }
 let currentScore = 0;
 function registerScore(score) {
