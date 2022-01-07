@@ -472,6 +472,8 @@ const hoverExitMessages = [
   [`Wait!`, `Don't you want to try again?`, `You can't give up that easily!`],
 ];
 
+const gameMessage = document.getElementById(`game-message`)!;
+
 const dialogBox = document.getElementById(`dialog-box`)!;
 dialogBox.onmousedown = (e) => e.stopPropagation();
 dialogBox.onscroll = updateLineOpacities;
@@ -594,6 +596,11 @@ function updateLineOpacities(): void {
     }
     n.style.opacity = String(0.2 + (yPos / 100) * 0.8);
   });
+}
+
+function displayGameMessage(msg: string): void {
+  gameMessage.innerHTML = ``;
+  gameMessage.innerText = msg;
 }
 
 function displayPopup(text: string, responses: DialogResponse[]): void {
@@ -758,4 +765,7 @@ function resumeWavegen(): void {
   wavegenPaused = false;
 }
 
-setTimeout(window.startGame);
+setTimeout(() => {
+  displayGameMessage(`BREAK INTO THE ROKS NETWORK`);
+  window.startGame();
+});

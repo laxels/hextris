@@ -78,10 +78,10 @@ function render() {
 function renderBeginningText() {
   var upperheight =
     trueCanvas.height / 2 -
-    settings.rows * settings.blockHeight * (2 / Math.sqrt(3)) * (5 / 6);
+    settings.rows * settings.blockHeight * (2 / Math.sqrt(3)) * (6 / 6);
   var lowerheight =
     trueCanvas.height / 2 +
-    settings.rows * settings.blockHeight * (2 / Math.sqrt(3)) * (11 / 16);
+    settings.rows * settings.blockHeight * (2 / Math.sqrt(3)) * (12 / 16);
   var text = "";
   var mob, fontSize;
   if (
@@ -91,19 +91,23 @@ function renderBeginningText() {
   ) {
     mob = true;
     input_text = "Tap the screen's left and right";
+    input_text_2 = "(or swipe right or left)";
     action_text = "sides to rotate the hexagon";
-    score_text = "Match 3+ blocks to score";
+    score_text = "Match 3+ blocks to clear";
+    score_text_2 = "a security layer.";
     fontSize = 35;
   } else {
     mob = false;
     input_text = "Use the right and left arrow keys";
+    input_text_2 = "(or swipe right or left)";
     action_text = "to rotate the hexagon";
-    score_text = "Match 3+ blocks to score!";
+    score_text = "Match 3+ blocks to clear";
+    score_text_2 = "a security layer.";
     fontSize = 27;
   }
   renderText(
     trueCanvas.width / 2 + 2 * settings.scale,
-    upperheight - 0 * settings.scale,
+    upperheight + 0 * settings.scale,
     fontSize,
     "#2c3e50",
     input_text,
@@ -111,6 +115,13 @@ function renderBeginningText() {
   renderText(
     trueCanvas.width / 2 + 2 * settings.scale,
     upperheight + 33 * settings.scale,
+    fontSize,
+    "#2c3e50",
+    input_text_2,
+  );
+  renderText(
+    trueCanvas.width / 2 + 2 * settings.scale,
+    upperheight + 66 * settings.scale,
     fontSize,
     "#2c3e50",
     action_text,
@@ -129,6 +140,13 @@ function renderBeginningText() {
     fontSize,
     "#2c3e50",
     score_text,
+  );
+  renderText(
+    trueCanvas.width / 2 + 2 * settings.scale,
+    lowerheight + 33 * settings.scale,
+    fontSize,
+    "#2c3e50",
+    score_text_2,
   );
 }
 
