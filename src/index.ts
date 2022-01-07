@@ -4,6 +4,7 @@ interface Window {
   enableGlyphs: () => void;
   enableDeadBlocks: () => void;
   activateUniformBlocks: (n: number) => void;
+  spawnDeadBlocks: () => void;
   GLYPHS: string[];
 }
 
@@ -399,7 +400,6 @@ const DIALOGS: { [key: string]: Dialog } = {
       `Oh sure`,
       `Try and fight me`,
       `You'll fail eventually`,
-      `/* If delete bar gets close to filling, drop enough dead blocks or create another event to end the game.  */`,
     ],
     responses: [],
   },
@@ -635,9 +635,30 @@ function fillDeleteBar(): void {
   deleteBarInner.style.width = `${deleteProgress}%`;
   if (deleteProgress < 100) {
     setTimeout(fillDeleteBar, Math.random() * 3000);
-  } else {
-    setTimeout(hideDeleteMessageAndBar, 2000);
   }
+
+  if (deleteProgress >= 80) {
+    triggerDeadBlockGameOver();
+  }
+}
+
+let deadBlockGameOver = false;
+function triggerDeadBlockGameOver(): void {
+  if (deadBlockGameOver) {
+    return;
+  }
+  deadBlockGameOver = true;
+  const interval = setInterval(() => {
+    if (currentDialogKey === `gameOver`) {
+      clearInterval(interval);
+      return;
+    }
+    window.spawnDeadBlocks();
+  }, 1000);
+}
+
+function triggerGameOver(): void {
+  void presentDialog(`gameOver`);
 }
 
 function displayPopup(text: string, responses: DialogResponse[]): void {

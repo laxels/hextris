@@ -230,3 +230,16 @@ function waveGen(hex) {
 
   this.currentFunction = this.randomGeneration;
 }
+
+function spawnDeadBlocks() {
+  for (const fv of [0, 1, 2, 3, 4, 5]) {
+    addNewBlock(
+      fv,
+      this.blockTypes[randInt(waveone.blockTypes.length)],
+      1.6 + (waveone.difficulty / 15) * 3,
+      undefined,
+      undefined,
+      true,
+    );
+  }
+}

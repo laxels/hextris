@@ -190,7 +190,7 @@ function init(b) {
   hideText();
 }
 
-function addNewBlock(blocklane, blockType, iter, distFromHex, settled) {
+function addNewBlock(blocklane, blockType, iter, distFromHex, settled, dead) {
   //last two are optional parameters
   iter *= settings.speedModifier;
   if (!history[MainHex.ct]) {
@@ -209,7 +209,9 @@ function addNewBlock(blocklane, blockType, iter, distFromHex, settled) {
   if (settled) {
     blockHist[MainHex.ct].settled = settled;
   }
-  blocks.push(new Block(blocklane, blockType, iter, distFromHex, settled));
+  blocks.push(
+    new Block(blocklane, blockType, iter, distFromHex, settled, dead),
+  );
 }
 
 function exportHistory() {
@@ -351,7 +353,7 @@ function checkGameOver() {
       }
       // writeHighScores();
       // gameOverDisplay();
-      presentDialog(`gameOver`);
+      triggerGameOver();
       return true;
     }
   }

@@ -368,7 +368,6 @@ const DIALOGS = {
             `Oh sure`,
             `Try and fight me`,
             `You'll fail eventually`,
-            `/* If delete bar gets close to filling, drop enough dead blocks or create another event to end the game.  */`,
         ],
         responses: [],
     },
@@ -574,9 +573,26 @@ function fillDeleteBar() {
     if (deleteProgress < 100) {
         setTimeout(fillDeleteBar, Math.random() * 3000);
     }
-    else {
-        setTimeout(hideDeleteMessageAndBar, 2000);
+    if (deleteProgress >= 80) {
+        triggerDeadBlockGameOver();
     }
+}
+let deadBlockGameOver = false;
+function triggerDeadBlockGameOver() {
+    if (deadBlockGameOver) {
+        return;
+    }
+    deadBlockGameOver = true;
+    const interval = setInterval(() => {
+        if (currentDialogKey === `gameOver`) {
+            clearInterval(interval);
+            return;
+        }
+        window.spawnDeadBlocks();
+    }, 1000);
+}
+function triggerGameOver() {
+    void presentDialog(`gameOver`);
 }
 function displayPopup(text, responses) {
     const textContainer = popupOverlay.querySelector(`#popup-box-text`);

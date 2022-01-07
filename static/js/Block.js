@@ -1,4 +1,4 @@
-function Block(fallingLane, blockType, iter, distFromHex, settled) {
+function Block(fallingLane, blockType, iter, distFromHex, settled, dead) {
   // whether or not a block is rested on the center hex or another block
   this.settled = settled === undefined ? 0 : 1;
   this.height = settings.blockHeight;
@@ -33,6 +33,7 @@ function Block(fallingLane, blockType, iter, distFromHex, settled) {
   //distance from center hex
   this.distFromHex = distFromHex || settings.startDist * settings.scale;
 
+  this.dead = dead;
   if (deadBlocksEnabled && Math.random() < 0.25) {
     this.dead = true;
   }
