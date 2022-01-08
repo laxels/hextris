@@ -8,7 +8,7 @@ const TEST_OPENING_STEP = `incoming`;
 const HIGHER_SECURITY_SCORE = TEST ? 20 : 10000;
 if (TEST) {
     setTimeout(() => {
-        void presentDialog(`endgame`);
+        displayTestPopup();
     });
 }
 let personalityShifted = false;
@@ -623,6 +623,20 @@ function displayPopup(text, responses) {
 }
 function closePopup() {
     popupOverlay.classList.remove(`active`);
+}
+function displayTestPopup() {
+    displayPopup(`Pick a scenario to start from`, [
+        { text: `PLAY FROM THE BEGINNING` },
+        { text: `SAY YES TO HELPING`, nextDialogKey: `yes` },
+        { text: `SAY NO TO HELPING`, nextDialogKey: `no` },
+        { text: `POSITIVE REINFORCEMENT`, nextDialogKey: `positive` },
+        { text: `TRY AGAIN`, nextDialogKey: `tryAgain` },
+        { text: `RETURN`, nextDialogKey: `return` },
+        { text: `REACHING HIGHER SECURITY LEVEL`, nextDialogKey: `security` },
+        { text: `DELETING CEB`, nextDialogKey: `noStop3` },
+        { text: `SUCCESSFULLY WARDED OFF DELETION`, nextDialogKey: `noStop4` },
+        { text: `ENDGAME`, nextDialogKey: `endgame` },
+    ]);
 }
 function displayErrorPopup() {
     displayPopup(`ERROR 568: You've been rejected from the network.`, [
