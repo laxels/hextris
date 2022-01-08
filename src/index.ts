@@ -5,6 +5,7 @@ interface Window {
   enableDeadBlocks: () => void;
   activateUniformBlocks: (n: number) => void;
   spawnDeadBlocks: () => void;
+  enableDevilMode: () => void;
   GLYPHS: string[];
 }
 
@@ -20,7 +21,7 @@ const HIGHER_SECURITY_SCORE = TEST ? 20 : 10000;
 
 if (TEST) {
   setTimeout(() => {
-    void presentDialog(`noStop3`);
+    void presentDialog(`endgame`);
   });
 }
 
@@ -448,8 +449,15 @@ const DIALOGS: { [key: string]: Dialog } = {
       `You've chosen a path you are going to regret.`,
       ``,
       `We will stop you.`,
-      `/* Here is where we really start to mess with the game. Feel free to get creative with the craziness here. */`,
-      `/* Glitch out the visuals for the game */`,
+    ],
+    responses: [],
+    autoAdvance: { nextDialogKey: `endgame`, waitMS: 3000 },
+  },
+  endgame: {
+    onStart: () => {
+      enableGlitch();
+    },
+    lines: [
       `/* Pop-up an Error message over the game. Player has to click OK to make the pop-up go away. */`,
       `/* Make game smaller */`,
       `You've made a terrible mistake `,
@@ -834,6 +842,10 @@ function stopWavegen(): void {
 }
 function resumeWavegen(): void {
   wavegenPaused = false;
+}
+
+function enableGlitch(): void {
+  window.enableDevilMode();
 }
 
 setTimeout(() => {

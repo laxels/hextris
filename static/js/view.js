@@ -38,12 +38,20 @@ function drawScoreboard() {
   renderText(
     trueCanvas.width / 2 + gdx,
     trueCanvas.height / 2 + gdy,
-    scoreSize,
+    devilMode ? 50 : scoreSize,
     window.colors[0],
-    score,
+    devilMode ? 666 : score,
   );
 
   ctx.globalAlpha = 1;
+}
+
+let devilMode = false;
+function enableDevilMode() {
+  devilMode = true;
+  setTimeout(() => {
+    devilMode = false;
+  }, 5000);
 }
 
 function clearGameBoard() {
