@@ -49,9 +49,6 @@ function drawScoreboard() {
 let devilMode = false;
 function enableDevilMode() {
   devilMode = true;
-  setTimeout(() => {
-    devilMode = false;
-  }, 5000);
 }
 
 function clearGameBoard() {
