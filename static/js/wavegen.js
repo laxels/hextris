@@ -14,6 +14,11 @@ function blockDestroyed() {
   }
 }
 
+function rampUpDifficulty() {
+  waveone.nextGen = 600;
+  waveone.difficulty = 35;
+}
+
 function waveGen(hex) {
   this.lastGen = 0;
   this.last = 0;

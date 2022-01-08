@@ -631,10 +631,35 @@ function displayTestPopup() {
         { text: `POSITIVE REINFORCEMENT`, nextDialogKey: `positive` },
         { text: `TRY AGAIN`, nextDialogKey: `tryAgain` },
         { text: `RETURN`, nextDialogKey: `return` },
-        { text: `REACHING HIGHER SECURITY LEVEL`, nextDialogKey: `security` },
-        { text: `DELETING CEB`, nextDialogKey: `noStop3` },
-        { text: `SUCCESSFULLY WARDED OFF DELETION`, nextDialogKey: `noStop4` },
-        { text: `ENDGAME`, nextDialogKey: `endgame` },
+        {
+            text: `REACHING HIGHER SECURITY LEVEL`,
+            nextDialogKey: `security`,
+            handler: window.rampUpDifficulty,
+        },
+        {
+            text: `DELETING CEB`,
+            nextDialogKey: `noStop3`,
+            handler: () => {
+                window.rampUpDifficulty();
+                window.enableDeadBlocks();
+            },
+        },
+        {
+            text: `SUCCESSFULLY WARDED OFF DELETION`,
+            nextDialogKey: `noStop4`,
+            handler: () => {
+                window.rampUpDifficulty();
+                window.enableDeadBlocks();
+            },
+        },
+        {
+            text: `ENDGAME`,
+            nextDialogKey: `endgame`,
+            handler: () => {
+                window.rampUpDifficulty();
+                window.enableDeadBlocks();
+            },
+        },
     ]);
 }
 function displayErrorPopup() {
@@ -762,9 +787,6 @@ function enableGlitch() {
     window.enableDevilMode();
     window.enableInvertedColorGlitch();
     window.enableDrawLocationGlitch();
-    setTimeout(() => {
-        openPage(`https://blog.ipleaders.in/wp-content/uploads/2020/02/Ways-Websites-Are-Hacked-How-to-Prevent-Them-1.png`);
-    }, 3000);
 }
 function openPage(url) {
     window.open(url, `_blank`);
