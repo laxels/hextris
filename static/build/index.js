@@ -747,6 +747,7 @@ function resumeWavegen() {
 }
 function enableGlitch() {
     window.enableDevilMode();
+    window.enableInvertedColorGlitch();
 }
 setTimeout(() => {
     window.startGame();

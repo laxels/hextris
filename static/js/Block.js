@@ -162,8 +162,8 @@ function Block(fallingLane, blockType, iter, distFromHex, settled, dead) {
       p2w = rotatePoint(this.widthWide / 2, drawHeight / 2, this.angle);
     }
 
-    let drawColor = this.dead ? window.deadColor : this.color;
-    ctx.fillStyle = this.dead ? window.deadColor : this.color;
+    let drawColor = getBlockColor(this.color, this.dead);
+    ctx.fillStyle = getBlockColor(this.color, this.dead);
     if (this.deleted) {
       drawColor = "#FFF";
       ctx.fillStyle = "#FFF";
@@ -235,7 +235,10 @@ function Block(fallingLane, blockType, iter, distFromHex, settled, dead) {
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(truncatedPoint.x, truncatedPoint.y);
+        ctx.save();
+        ctx.strokeStyle = getBlockColor(this.color, dead);
         ctx.stroke();
+        ctx.restore();
 
         x1 += delta.x;
         y1 += delta.y;
@@ -335,4 +338,23 @@ function activateUniformBlocks(n) {
 let deadBlocksEnabled = false;
 function enableDeadBlocks() {
   deadBlocksEnabled = true;
+}
+
+let invertedColorsEnabled = false;
+function enableInvertedColorGlitch() {
+  invertedColorsEnabled = true;
+}
+
+function getBlockColor(blockColor, dead) {
+  if (dead) {
+    return useInvertedColors() ? window.invertedDeadColor : window.deadColor;
+  }
+  return useInvertedColors() ? window.invertedColor : blockColor;
+}
+
+function useInvertedColors() {
+  if (!invertedColorsEnabled) {
+    return false;
+  }
+  return Math.random() < 0.5;
 }

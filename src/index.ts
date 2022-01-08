@@ -6,6 +6,7 @@ interface Window {
   activateUniformBlocks: (n: number) => void;
   spawnDeadBlocks: () => void;
   enableDevilMode: () => void;
+  enableInvertedColorGlitch: () => void;
   GLYPHS: string[];
 }
 
@@ -846,6 +847,7 @@ function resumeWavegen(): void {
 
 function enableGlitch(): void {
   window.enableDevilMode();
+  window.enableInvertedColorGlitch();
 }
 
 setTimeout(() => {
