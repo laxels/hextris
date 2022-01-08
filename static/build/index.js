@@ -3,9 +3,8 @@ const TEST = window.location.search.startsWith(`?test`);
 const LINE_DELAY_MS = TEST ? 0 : 1000;
 const LINE_PAUSE_MS = TEST ? 500 : 3000;
 const TEXT_DELAY_MS = TEST ? 0 : 20;
-const CLEARS_BEFORE_DIALOG_OPENING = TEST ? 1 : 5;
-const TEST_OPENING_STEP = `incoming`;
-const HIGHER_SECURITY_SCORE = TEST ? 20 : 10000;
+const CLEARS_BEFORE_DIALOG_OPENING = 5;
+const HIGHER_SECURITY_SCORE = 10000;
 if (TEST) {
     setTimeout(() => {
         displayTestPopup();
@@ -680,7 +679,7 @@ function clearedBlocks() {
     timesCleared++;
     if (timesCleared >= CLEARS_BEFORE_DIALOG_OPENING &&
         currentDialogKey == null) {
-        void presentDialog(TEST ? TEST_OPENING_STEP : `incoming`);
+        void presentDialog(`incoming`);
         return;
     }
     if (currentDialogKey === `positive` && timesCleared % 5 === 0) {
