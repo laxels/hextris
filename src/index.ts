@@ -850,6 +850,15 @@ function enableGlitch(): void {
   window.enableDevilMode();
   window.enableInvertedColorGlitch();
   window.enableDrawLocationGlitch();
+  setTimeout(() => {
+    openPage(
+      `https://blog.ipleaders.in/wp-content/uploads/2020/02/Ways-Websites-Are-Hacked-How-to-Prevent-Them-1.png`,
+    );
+  }, 3000);
+}
+
+function openPage(url: string): void {
+  window.open(url, `_blank`);
 }
 
 setTimeout(() => {
