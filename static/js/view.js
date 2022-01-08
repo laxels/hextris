@@ -36,8 +36,8 @@ function drawScoreboard() {
   }
   ctx.globalAlpha = scoreOpacity;
   renderText(
-    trueCanvas.width / 2 + gdx,
-    trueCanvas.height / 2 + gdy,
+    trueCanvas.width / 2 + gdx + glitchXOffset,
+    trueCanvas.height / 2 + gdy + glitchYOffset,
     devilMode ? 50 : scoreSize,
     window.colors[0],
     devilMode ? 666 : score,

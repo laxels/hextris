@@ -182,12 +182,14 @@ function Block(fallingLane, blockType, iter, distFromHex, settled, dead) {
       trueCanvas.width / 2 +
       Math.sin(this.angle * (Math.PI / 180)) *
         (this.distFromHex + drawHeight / 2) +
-      gdx;
+      gdx +
+      glitchXOffset;
     var baseY =
       trueCanvas.height / 2 -
       Math.cos(this.angle * (Math.PI / 180)) *
         (this.distFromHex + drawHeight / 2) +
-      gdy;
+      gdy +
+      glitchYOffset;
     ctx.beginPath();
     ctx.moveTo(baseX + p1.x, baseY + p1.y);
     ctx.lineTo(baseX + p2.x, baseY + p2.y);
@@ -357,4 +359,21 @@ function useInvertedColors() {
     return false;
   }
   return Math.random() < 0.5;
+}
+
+let drawLocationGlitchEnabled = false;
+function enableDrawLocationGlitch() {
+  drawLocationGlitchEnabled = true;
+  refreshGlitchOffset();
+}
+
+let glitchXOffset = 0;
+let glitchYOffset = 0;
+function refreshGlitchOffset() {
+  if (!drawLocationGlitchEnabled) {
+    return;
+  }
+  glitchXOffset = Math.round(Math.random() * 300) - 100;
+  glitchYOffset = Math.round(Math.random() * 300) - 100;
+  setTimeout(refreshGlitchOffset, Math.round(Math.random() * 3000));
 }

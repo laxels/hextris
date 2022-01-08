@@ -7,6 +7,7 @@ interface Window {
   spawnDeadBlocks: () => void;
   enableDevilMode: () => void;
   enableInvertedColorGlitch: () => void;
+  enableDrawLocationGlitch: () => void;
   GLYPHS: string[];
 }
 
@@ -848,6 +849,7 @@ function resumeWavegen(): void {
 function enableGlitch(): void {
   window.enableDevilMode();
   window.enableInvertedColorGlitch();
+  window.enableDrawLocationGlitch();
 }
 
 setTimeout(() => {

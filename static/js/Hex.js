@@ -205,8 +205,8 @@ function Hex(sideLength) {
     }
 
     drawPolygon(
-      this.x + gdx,
-      this.y + gdy + this.dy,
+      this.x + gdx + glitchXOffset,
+      this.y + gdy + glitchYOffset + this.dy,
       this.sides,
       this.sideLength,
       this.angle,
