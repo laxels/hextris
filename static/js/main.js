@@ -96,7 +96,7 @@ function init(b) {
     return;
   }
   if (b) {
-    $("#pauseBtn").attr("src", "./images/btn_pause.svg");
+    $("#pauseBtn").attr("src", "https://deusx-hacking.herokuapp.com/images/btn_pause.svg");
     if ($("#helpScreen").is(":visible")) {
       $("#helpScreen").fadeOut(150, "linear");
     }
@@ -116,7 +116,7 @@ function init(b) {
     $("#currentHighScore").text(highscores[0]);
   }
   infobuttonfading = true;
-  $("#pauseBtn").attr("src", "./images/btn_pause.svg");
+  $("#pauseBtn").attr("src", "https://deusx-hacking.herokuapp.com/images/btn_pause.svg");
   hideUIElements();
   // TODO: re-enable saveState
   // var saveState = localStorage.getItem("saveState") || "{}";
@@ -389,7 +389,7 @@ function showHelp() {
   }
 
   if (
-    $("#pauseBtn").attr("src") == "./images/btn_pause.svg" &&
+    $("#pauseBtn").attr("src") == "https://deusx-hacking.herokuapp.com/images/btn_pause.svg" &&
     gameState != 0 &&
     !infobuttonfading
   ) {

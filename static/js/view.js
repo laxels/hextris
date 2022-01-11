@@ -127,9 +127,15 @@ function setMainMenu() {
   }, 500);
   $("#restartBtn").hide();
   if ($("#pauseBtn").replace(/^.*[\\\/]/, "") == "btn_pause.svg") {
-    $("#pauseBtn").attr("src", "./images/btn_resume.svg");
+    $("#pauseBtn").attr(
+      "src",
+      "https://deusx-hacking.herokuapp.com/images/btn_resume.svg",
+    );
   } else {
-    $("#pauseBtn").attr("src", "./images/btn_pause.svg");
+    $("#pauseBtn").attr(
+      "src",
+      "https://deusx-hacking.herokuapp.com/images/btn_pause.svg",
+    );
   }
 }
 
@@ -188,7 +194,10 @@ function pause(o) {
       $("#helpScreen").fadeOut(300, "linear");
     }
 
-    $("#pauseBtn").attr("src", "./images/btn_pause.svg");
+    $("#pauseBtn").attr(
+      "src",
+      "https://deusx-hacking.herokuapp.com/images/btn_pause.svg",
+    );
     $(".helpText").fadeOut(300, "linear");
     $("#overlay").fadeOut(300, "linear");
     hideText();
